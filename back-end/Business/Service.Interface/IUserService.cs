@@ -3,7 +3,7 @@
 
 namespace Service.Interface
 {
-    public interface UserIService
+    public interface IUserService
     {
         Task<UserRead> GetUserByName(string name);
         Task<string> Register(UserRegister request);

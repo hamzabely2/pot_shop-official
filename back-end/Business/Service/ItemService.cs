@@ -8,22 +8,18 @@ using Service.Interface;
 
 namespace Service
 {
-    public class ItemService : ItemIService
+    public class ItemService : IItemService
     {
         private readonly ItemIRepository _itemRepository;
-        private readonly ColorIService _colorService;
-        private readonly MaterialIService _materialService;
-        private readonly CategoryIService _categoryService;
+        private readonly IDetailsItemService _detailsItemIService;
         private readonly PotShopIDbContext _table;
 
 
 
-        public ItemService(PotShopIDbContext _idbcontext, ItemIRepository itemRepository, ColorIService colorService, MaterialIService materialService, CategoryIService categoryService)
+        public ItemService(PotShopIDbContext _idbcontext, ItemIRepository itemRepository, IDetailsItemService detailsItemIService)
         {
             _itemRepository = itemRepository;
-            _colorService = colorService;
-            _materialService = materialService;
-            _categoryService = categoryService;
+            _detailsItemIService = detailsItemIService;
             _table = _idbcontext;
 
         }
@@ -32,9 +28,9 @@ namespace Service
 
         private async void AddingItemDetails()
         {
-            _colorService.AddColors();
-            _categoryService.AddCategories();
-            _materialService.AddMaterials();
+            _detailsItemIService.AddColors();
+            _detailsItemIService.AddCategories();
+            //_detailsItemIService.AddMaterials();
         }
 
         /// get item by id <summary>

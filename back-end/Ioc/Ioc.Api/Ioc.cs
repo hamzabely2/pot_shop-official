@@ -31,14 +31,12 @@ namespace Ioc.Api
         }
         public static IServiceCollection ConfigureInjectionDependencyService(this IServiceCollection services)
         {
-            services.AddScoped<ConnectionIService, ConnectionService>();
-            services.AddScoped<ItemIService, ItemService>();
-            services.AddScoped<ColorIService, ColorService>();
-            services.AddScoped<CategoryIService, CategoryService>();
-            services.AddScoped<UserIService, UserService>();
-            services.AddScoped<RoleIService, RoleService>();
-            services.AddScoped<AdressIService, AdressService>();
-
+            services.AddScoped<IConnectionService, ConnectionService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAdressService, AdressService>();
+            services.AddScoped<IDetailsItemService, DetailsItemService>();
 
             return services;
         }

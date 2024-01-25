@@ -4,7 +4,7 @@ using Model.Adress;
 
 namespace Service.Interface
 {
-    public interface AdressIService
+    public interface IAdressService
     {
         Task<AdressRead> Add(AdressAdd request);
         Task<List<AdressRead>> GetAddresseForUser();

@@ -2,7 +2,7 @@
 
 namespace Service.Interface
 {
-    public interface RoleIService
+    public interface IRoleService
     {
         void AddRoles();
         Task<RoleUser> AssignRoleAsync(int userId, int roleId);

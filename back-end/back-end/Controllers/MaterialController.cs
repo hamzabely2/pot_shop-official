@@ -10,9 +10,9 @@ namespace Controllers
     [ApiController]
     public class MaterialController : Controller
     {
-        private readonly MaterialIService _materialService;
+        private readonly IDetailsItemService _materialService;
 
-        public MaterialController(MaterialIService materialService)
+        public MaterialController(IDetailsItemService materialService)
         {
             _materialService = materialService;
         }
@@ -89,6 +89,9 @@ namespace Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+
+
 
     }
 }

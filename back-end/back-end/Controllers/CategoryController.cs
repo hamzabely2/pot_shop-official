@@ -11,9 +11,9 @@ namespace Controllers
     [ApiController]
     public class CategoryController : Controller
     {
-        private readonly CategoryIService _categoryService;
+        private readonly IDetailsItemService _categoryService;
 
-        public CategoryController(CategoryIService categoryService)
+        public CategoryController(IDetailsItemService categoryService)
         {
             _categoryService = categoryService;
         }

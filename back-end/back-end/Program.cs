@@ -1,33 +1,28 @@
-
-using Ioc.Api;
+﻿using Ioc.Api;
 using Ioc.Test;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
 
+builder.Services.AddHttpContextAccessor();
 
 if (builder.Environment.IsEnvironment("Test"))
 {
-    // Configure Database connection
     builder.Services.ConfigureDBContextTest();
 
-    // Dependency Injection
     builder.Services.ConfigureInjectionDependencyRepositoryTest();
     builder.Services.ConfigureInjectionDependencyServiceTest();
 }
 else
 {
-    // Configure Database connection
     builder.Services.ConfigureDBContext(configuration);
-
-    // Dependency Injection
     builder.Services.ConfigureInjectionDependencyRepository();
     builder.Services.ConfigureInjectionDependencyService();
+
 }
 
 
@@ -36,14 +31,12 @@ var validAudience = builder.Configuration["JWT:ValidAudience"];
 var validIssuer = builder.Configuration["JWT:ValidIssuer"];
 var secret = builder.Configuration["JWT:Secret"];
 
-// Log or debug these values
-Log.Information($"ValidAudience: {validAudience}, ValidIssuer: {validIssuer}, Secret: {secret}");
-
-// Set up JWT authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
 })
 .AddJwtBearer(options =>
 {
@@ -60,6 +53,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddCors(
+    options => options.AddPolicy("TestPolicy",
+        policy => policy.WithOrigins("http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+    )
+    );
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -72,13 +74,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("TestPolicy");
 app.MapControllers();
 
 app.Run();

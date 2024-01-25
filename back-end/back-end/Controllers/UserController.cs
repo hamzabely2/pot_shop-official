@@ -10,8 +10,8 @@ namespace Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private readonly UserIService _userService;
-        public UserController(UserIService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }

@@ -2,24 +2,27 @@
 
 using Entity.Model;
 using Mapper.Adress;
+using Microsoft.AspNetCore.Http;
 using Model.Adress;
 using Repository.Interface;
 using Service.Interface;
 
 namespace Service
 {
-    public class AdressService : AdressIService
+    public class AdressService : IAdressService
     {
         private readonly AdressIRepository _adressRepository;
-        private readonly UserIService _userService;
-        private readonly ConnectionIService _connectionService;
+        private readonly IConnectionService _connectionService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public AdressService(UserIService userService, AdressIRepository adressRepository, ConnectionIService connectionService)
+
+        public AdressService(AdressIRepository adressRepository, IConnectionService connectionService,IHttpContextAccessor httpContextAccessor)
         {
             _adressRepository = adressRepository;
-            _userService = userService;
             _connectionService = connectionService;
+            _httpContextAccessor = httpContextAccessor;
+
         }
 
         /// add addresse <summary>
@@ -29,7 +32,7 @@ namespace Service
         /// <exception cref="ArgumentException"></exception>
         public async Task<AdressRead> Add(AdressAdd request)
         {
-            var userInfo = _connectionService.GetCurrentUserInfo();
+            var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
             if (userInfo.Id == 0)
                 throw new ArgumentException("l'action a échoué :l'utilisateur ne existe pas");
@@ -51,7 +54,7 @@ namespace Service
         /// <exception cref="ArgumentException"></exception>
         public async Task<List<AdressRead>> GetAddresseForUser()
         {
-            var userInfo = _connectionService.GetCurrentUserInfo();
+            var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
             if (userInfo.Id == 0)
                 throw new ArgumentException("l'action a échoué :l'utilisateur  ne existe pas");

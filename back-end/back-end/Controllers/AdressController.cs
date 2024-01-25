@@ -12,8 +12,8 @@ namespace Controllers
     [Authorize(Roles = RoleString.User)]
     public class AdressController : Controller
     {
-        private readonly AdressIService _adressService;
-        public AdressController(AdressIService adressService)
+        private readonly IAdressService _adressService;
+        public AdressController(IAdressService adressService)
         {
             _adressService = adressService;
         }

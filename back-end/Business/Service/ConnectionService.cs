@@ -1,28 +1,23 @@
-﻿using Entity.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Repository.Interface;
-using Service.Interface;
+﻿using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Service.Interface;
+using Entity.Model;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 
 namespace Service
 {
-    public class ConnectionService : ConnectionIService
+    public class ConnectionService : IConnectionService
     {
         private readonly IConfiguration _configuration;
-        private readonly RoleIRepository _roleRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ConnectionService(IConfiguration configuration, RoleIRepository roleRepository, IHttpContextAccessor httpContextAccessor)
+        public ConnectionService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _roleRepository = roleRepository;
-            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -106,7 +101,7 @@ namespace Service
         /// get info user
         /// </summary>
         /// <returns></returns>
-        public UserInfo GetCurrentUserInfo()
+        public UserInfo GetCurrentUserInfo(IHttpContextAccessor _httpContextAccessor)
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var tokenHandler = new JwtSecurityTokenHandler();

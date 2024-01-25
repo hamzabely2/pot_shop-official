@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.DetailsItem;
+using Service;
 using Service.Interface;
 
 namespace Controllers
@@ -13,9 +14,9 @@ namespace Controllers
     public class ColorController : Controller
     {
 
-        private readonly ColorIService _colorService;
+        private readonly IDetailsItemService _colorService;
 
-        public ColorController(ColorIService colorService)
+        public ColorController(IDetailsItemService colorService)
         {
             _colorService = colorService;
         }

@@ -1,5 +1,6 @@
 ﻿using Entity.Model;
 using Mapper.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Model.User;
 using Repository.Interface;
@@ -10,23 +11,22 @@ using System.Security.Claims;
 
 namespace Service
 {
-    public class UserService : UserIService
+    public class UserService : IUserService
     {
 
         private readonly UserIRepository _userRepository;
-        private readonly RoleIService _roleService;
+        private readonly IRoleService _roleService;
         private readonly RoleIRepository _roleRepository;
-        private readonly IConfiguration _configuration;
-        private readonly ConnectionIService _connectionService;
+        private readonly IConnectionService _connectionService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(UserIRepository userRepository, IConfiguration configuration, RoleIService roleService, RoleIRepository roleRepository, ConnectionIService connectionService)
+        public UserService(UserIRepository userRepository,  IRoleService roleService, RoleIRepository roleRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
-            _configuration = configuration;
             _roleService = roleService;
             _roleRepository = roleRepository;
             _connectionService = connectionService;
-
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -43,6 +43,13 @@ namespace Service
 
             return UserMapper.TransformDtoExit(user);
         }
+
+        /// <summary>
+        /// register user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
 
         public async Task<string> Register(UserRegister request)
         {
@@ -142,7 +149,7 @@ namespace Service
         /// <exception cref="ArgumentException"></exception>
         public async Task<UserRead> Update(UserUpdate request)
         {
-            var userInfo = _connectionService.GetCurrentUserInfo();
+            var userInfo = _connectionService.GetCurrentUserInfo( _httpContextAccessor);
             int userConnectedId = userInfo.Id;
             var userToUpdate = await _userRepository.GetByKeys(userConnectedId);
             if (userToUpdate == null)
@@ -174,7 +181,7 @@ namespace Service
         /// <exception cref="ArgumentException"></exception>
         public async Task<UserRead> UpdatePassword(UserPassword request)
         {
-            var userInfo = _connectionService.GetCurrentUserInfo();
+            var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userConnectedId = userInfo.Id;
             var user = await _userRepository.GetByKeys(userConnectedId);
 
@@ -202,7 +209,7 @@ namespace Service
         }
 
 
-        /// Delete user <summary>
+        /// Delete user<summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

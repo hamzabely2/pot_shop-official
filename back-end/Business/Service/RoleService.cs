@@ -6,15 +6,12 @@ using Service.Interface;
 
 namespace Service
 {
-    public class RoleService : RoleIService
+    public class RoleService : IRoleService
     {
-
-
         private readonly PotShopIDbContext _context;
         private readonly RoleIRepository _roleRepository;
         private readonly UserIRepository _userRepository;
         private readonly RoleUserIRepository _roleUserRepository;
-
 
         public RoleService(PotShopIDbContext context, RoleIRepository roleRepository, UserIRepository userRepository, RoleUserIRepository roleUserRepository)
         {
