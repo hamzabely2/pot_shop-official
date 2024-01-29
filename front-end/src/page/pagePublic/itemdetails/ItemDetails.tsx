@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../../../components/navBar/NavBar';
+import NavBar from '../../../components/navBar/NavBar.jsx';
 import { Link, useLocation } from 'react-router-dom'
 
 const ItemDetails : React.FC  =( ) => {

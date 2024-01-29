@@ -1,17 +1,16 @@
 import React from 'react';
-
+import NavBar from '../../../components/navBar/NavBar';
 
 const Nous = () => {
 
     return (
         <div>
+            <NavBar/>
+
             <div className="bg-white">
                 <h1 className="text_nav text-2xl leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">منتجات نوتر</h1>
-
                 <div className="relative justify-center flex items-center">
                     <div className="bg-amber-700 linea1"></div>
-
-
                     <h2 className="text_nav  leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Notre Produits</h2>
                     <div className="linea1"></div>
                 </div>

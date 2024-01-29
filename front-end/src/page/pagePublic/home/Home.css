@@ -117,3 +117,13 @@ html, body{
     width : 800px
 }
 
+
+.image-home{
+    border-radius : 20px;
+    height : 299px;
+}
+
+.text-nav{
+    display: flex;
+    align-items: flex-start;
+}
