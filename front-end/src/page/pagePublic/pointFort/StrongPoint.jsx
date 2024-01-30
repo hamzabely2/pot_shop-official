@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PointFort = () => {
+const StrongPoint = () => {
     return (
         <div>
             <div className="relative justify-center flex items-center">
@@ -18,7 +18,6 @@ const PointFort = () => {
                                 <img src="/img/icons/icons_recycler100.png" className="logo2"></img>
                             </dd>
                         </div>
-
                         <div className="mx-auto flex max-w-xs flex-col gap-y-4 ">
                             <dt className="text-base leading-7 text-gray-600">Quality</dt>
                             <p>Un matériau est considéré comme recyclable lorsqu'il peut être collecté, transformé et réutilisé pour la production de  </p>
@@ -26,8 +25,6 @@ const PointFort = () => {
                                 <img src="/img/icons/icons_recession100.png" className="logo3"></img>
                             </dd>
                         </div>
-
-
                         <div className="mx-auto flex max-w-xs flex-col gap-y-4">
                             <dt className="text-base leading-7 text-gray-600">Quality</dt>
                             <p>Un matériau est considéré comme recyclable lorsqu'il peut être collecté, transformé et réutilisé pour la production de nouveaux </p>
@@ -43,4 +40,4 @@ const PointFort = () => {
     );
 };
 
-export default PointFort;
+export default StrongPoint;

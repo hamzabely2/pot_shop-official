@@ -2,17 +2,17 @@ import React from 'react';
 import NavBar from '../../../components/navBar/NavBar';
 
 const Nous = () => {
+    const scrollToContent = null
 
     return (
         <div>
-            <NavBar/>
-
+            <NavBar scrollToContent={scrollToContent} />
             <div className="bg-white">
                 <h1 className="text_nav text-2xl leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">منتجات نوتر</h1>
                 <div className="relative justify-center flex items-center">
-                    <div className="bg-amber-700 linea1"></div>
-                    <h2 className="text_nav  leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Notre Produits</h2>
-                    <div className="linea1"></div>
+                    <div className=""><img alt="image de decoration" className="w-40 mr-4" src="/img/decoration/decoration_right.jpg"></img></div>
+                    <h2 className="text_nav leading-7 text.black sm:truncate sm:text-3xl ">Plus sur Nous</h2>
+                    <div className=""><img alt="image de decoration" className="w-40 ml-4" src="/img/decoration/decoration_left.jpg"/></div>
                 </div>
                 <div
                     className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 py-24 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">

@@ -1,18 +1,6 @@
 import axios from "axios";
-interface registerClass
-{
-    lastName : string;
-    userName : string;
-    email : string;
-    password : string;
-}
-interface loginClass
-{
-    email : string;
-    password : string;
-}
-let userString = "User";
-export const RegisterService = async(payload: registerClass)  => {
+const userString = "User";
+export const RegisterService = async(payload)  => {
 
     try {
         return await axios.post(`${process.env.REACT_APP_URL}${userString}/register`,{
@@ -21,18 +9,18 @@ export const RegisterService = async(payload: registerClass)  => {
             email : payload.email,
             password : payload.password,
         })
-    } catch (error : any) {
+    } catch (error ) {
         return error
     }
 }
 
-export const LoginService = async(payload: loginClass)  => {
+export const LoginService = async(payload)  => {
     try {
         return  await axios.post(`${process.env.REACT_APP_URL}${userString}/login`,{
             email : payload.email,
             password : payload.password,
         })
-    } catch (error : any) {
+    } catch (error ) {
         return error
     }
 }

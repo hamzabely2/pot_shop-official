@@ -5,10 +5,11 @@ import { Link, useLocation } from 'react-router-dom'
 const ItemDetails : React.FC  =( ) => {
   let location = useLocation();
   const { item } = location.state
+  const scrollToContent = null
 
   return (
       <div>
-      <NavBar/>
+      <NavBar scrollToContent={scrollToContent} contact={false}/>
         <div className="bg-white p-5">
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Présentation du produit</h2>

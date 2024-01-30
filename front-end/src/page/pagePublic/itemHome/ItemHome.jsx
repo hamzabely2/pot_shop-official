@@ -16,7 +16,7 @@ interface ItemClass {
     updateDate : string;
     description : string;
 }
-const  Item : React.FC = () => {
+const  ItemHome : React.FC = () => {
     const { data, loading, error } = GetAllItem();
 
     if (loading) {
@@ -71,4 +71,4 @@ const  Item : React.FC = () => {
     );
 };
 
-export default Item;
+export default ItemHome;

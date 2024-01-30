@@ -7,25 +7,20 @@ import {ToastError, ToastSuccess} from "../../components/poPup/Toast";
 import {Link, useNavigate} from 'react-router-dom';
 import {setCookie} from "../../service/useAuth";
 
-type ApiErrors = {
-    Email?: string[];
-    LastName?: string[];
-    Password?: string[];
-    UserName?: string[];
-};
 
-const Register: React.FC = () => {
-    const [userName,setUserName] = useState<string>("");
-    const [lastName,setLastName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+
+const Register= () => {
+    const [userName,setUserName] = useState("");
+    const [lastName,setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const displayApiErrors = (errors: ApiErrors) => {
+    const displayApiErrors = (errors) => {
         for (const key in errors ) {
             if (errors.hasOwnProperty(key)) {
 
-                let errorMessages: ApiErrors;
+                let errorMessages;
                 // @ts-ignore
                 errorMessages = errors[key];
                 if (Array.isArray(errorMessages)) {
@@ -36,10 +31,10 @@ const Register: React.FC = () => {
             }
         }
     };
-    const handleRegister = async (event : any) =>{
+    const handleRegister = async (event ) =>{
         event.preventDefault();
         try {
-            const response : any  = await RegisterService(   {userName, lastName, email, password});
+            const response = await RegisterService(   {userName, lastName, email, password});
             if (response.status === 200){
                 setTimeout(() => {
                     ToastSuccess(response.data.message);

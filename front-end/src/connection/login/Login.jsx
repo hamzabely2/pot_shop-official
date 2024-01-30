@@ -3,26 +3,17 @@ import {ToastContainer} from "react-toastify";
 import {ToastError, ToastSuccess} from "../../components/poPup/Toast";
 import { LoginService} from "../../service/ServiceConnection";
 import {Link, useNavigate} from "react-router-dom";
-import Cookies from 'universal-cookie';
 import {setCookie} from "../../service/useAuth";
-
-type ApiErrors = {
-    Email?: string[];
-    LastName?: string[];
-    Password?: string[];
-    UserName?: string[];
-};
 
 
 const Login = () => {
-    const [email, setEmail] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const navigate = useNavigate();
 
-    const displayApiErrors = (errors: ApiErrors) => {
+    const displayApiErrors = (errors) => {
         for (const key in errors ) {
             if (errors.hasOwnProperty(key)) {
-                // @ts-ignore
                 const errorMessages = errors[key];
                 if (Array.isArray(errorMessages)) {
                     errorMessages.forEach((errorMessage) => {
@@ -32,11 +23,11 @@ const Login = () => {
             }
         }
     };
-    const handleLogin = async (event : any) =>{
+    const handleLogin = async (event) =>{
         event.preventDefault();
 
         try {
-            const response: any = await LoginService({email, password});
+            const response = await LoginService({email, password});
             if (response.status === 200) {
                 setTimeout(() => {
                     ToastSuccess(response.data.message);

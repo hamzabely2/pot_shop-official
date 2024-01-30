@@ -3,7 +3,7 @@ const cookies = new Cookies();
 
 export const Token = () => {
     let token = cookies.get("token")
-    function decodeToken(token : string | null) {
+    function decodeToken(tokenl) {
         try {
             if(token === null)
                 return null;
@@ -28,13 +28,12 @@ export const Token = () => {
     }
 }
 
-
-export const setCookie = (name: string, token: string, days: number) => {
+export const setCookie = (name, token, days) => {
     const date = new Date();
     date.setTime(date.getTime() * 2);
     cookies.set(name, token, { expires: date, path: '/', secure: true, sameSite: 'strict' });
 };
 
-export const removeCookie = (name: string) => {
+export const removeCookie = (name) => {
     cookies.remove(name);
 };

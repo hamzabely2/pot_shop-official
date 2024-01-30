@@ -3,9 +3,11 @@ import {Link} from "react-router-dom";
 import NavBar from "../../../components/navBar/NavBar.jsx";
 
 const Error404 = () => {
+    const scrollToContent = null
+
     return (
         <div>
-            <NavBar/>
+            <NavBar scrollToContent={scrollToContent} contact={false} />
             <div className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
                 <div className="text-center">
                     <p className="text-base font-semibold text-indigo-600">404</p>

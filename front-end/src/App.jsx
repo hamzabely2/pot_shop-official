@@ -1,7 +1,7 @@
 import React from "react";
 import './App.css';
 import Login from './connection/login/Login'
-import Home from "./page/pagePublic/home/Home";
+import Home from "./page/pagePublic/home/Home.jsx";
 import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import Register from "./connection/register/Register";
 import Nous from "./page/pagePublic/Nous/Nous.jsx";
@@ -10,8 +10,10 @@ import {ProtectedRoute} from "./route/Route";
 import {Token} from "./service/useAuth";
 import Profile from "./page/pageUser/profile/Profile";
 import HomeAdmin from "./page/pageAdmin/HomeAdmin/HomeAdmin";
-import Contact from "./components/contact/Contact";
+import Contact from "./components/contact/Contact.jsx";
 import ItemDetails from "./page/pagePublic/itemdetails/ItemDetails";
+import Collection from "./page/pagePublic/collection/Collection";
+import Item from "./page/item/Item";
 function App() {
 
     let user = Token()
@@ -30,9 +32,9 @@ function App() {
                 <Route path='/profile' /*element={<ProtectedRoute role={role} allowedRoles={["User"]} component={Profile}*/ element={<Profile/>}/>
                 <Route path='/admin' element={<HomeAdmin/>}/>
                 <Route path='/contact' element={<Contact/>}/>
-                <Route path='/itemDetails/:id' element={<ItemDetails />}/>
-
-
+                <Route path='/itemDetails/:id' element={<ItemDetails/>}/>
+                <Route path='/collection' element={<Collection/>}/>
+                <Route path='/item' element={<Item/>}/>
             </Routes>
          </BrowserRouter>
     </div>
