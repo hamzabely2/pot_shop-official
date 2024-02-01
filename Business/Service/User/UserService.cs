@@ -1,8 +1,12 @@
 ﻿using Entity.Model;
+using Mapper.Item;
 using Mapper.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Model.Item;
 using Model.User;
+using Org.BouncyCastle.Utilities;
+using Repository.Interface.Item;
 using Repository.Interface.User;
 using Service.Interface.User;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,6 +46,29 @@ namespace Service.User
                 throw new ArgumentException($"le user {name} ne existe pas.");
 
             return UserMapper.TransformDtoExit(user);
+        }
+
+
+        /// get all users <summary>
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Entity.Model.User>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _userRepository.GetAllAsync().ConfigureAwait(false);
+
+                if (users == null || !users.Any())
+                {
+                    throw new ArgumentException("La récupération des utilisateurs a échoué ou la liste est vide.");
+                }
+
+                return users.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Une erreur s'est produite lors de la récupération des utilisateurs.", ex);
+            }
         }
 
         /// <summary>
