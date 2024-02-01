@@ -28,9 +28,15 @@ namespace Service.Order
             _itemRepository = itemRepository;
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
-
-
         }
+
+
+        /// <summary>
+        /// add item in cart
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<CartItem> AddToCart(AddCart request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
@@ -51,8 +57,10 @@ namespace Service.Order
         }
 
 
-
-
+        /// <summary>
+        /// get cart 
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<CartItem>> GetCards()
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);

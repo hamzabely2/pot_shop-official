@@ -39,6 +39,30 @@ namespace back_end.Controllers
             }
         }
 
+
+        /// get all users <summary>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("")]
+        //[Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(UserRead), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> FuncGetAllUser()
+        {
+            try
+            {
+                var result = await _userService.GetAllUsers().ConfigureAwait(false);
+                string message = "listes utilisateurs";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         /// register user <summary>
         /// </summary>
         /// <param name="request"></param>

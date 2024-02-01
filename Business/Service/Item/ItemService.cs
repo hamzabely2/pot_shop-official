@@ -14,17 +14,12 @@ namespace Service.Item
         private readonly IDetailsItemService _detailsItemIService;
         private readonly PotShopIDbContext _table;
 
-
-
         public ItemService(PotShopIDbContext _idbcontext, ItemIRepository itemRepository, IDetailsItemService detailsItemIService)
         {
             _itemRepository = itemRepository;
             _detailsItemIService = detailsItemIService;
             _table = _idbcontext;
-
         }
-
-
 
         private async void AddingItemDetails()
         {
@@ -63,7 +58,6 @@ namespace Service.Item
 
             return items.Select(item => ItemMapper.TransformDtoExitWithDetails(item)).ToList();
         }
-
 
         /// add item <summary>
         /// </summary>
