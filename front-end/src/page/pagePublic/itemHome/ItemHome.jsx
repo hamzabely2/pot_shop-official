@@ -3,20 +3,8 @@ import {GetAllItem} from "../../../service/ServiceItem";
 import {Link} from "react-router-dom";
 import SkeletonItem from "../../../components/skeletons/SkeletonItem";
 
-interface ItemClass {
-    id :number;
-    image: string;
-    name : string;
-    price : number;
-    stock : number;
-    category : number;
-    color : number;
-    material : number;
-    createdDate : string;
-    updateDate : string;
-    description : string;
-}
-const  ItemHome : React.FC = () => {
+
+const  ItemHome = () => {
     const { data, loading, error } = GetAllItem();
 
     if (loading) {
@@ -33,7 +21,6 @@ const  ItemHome : React.FC = () => {
             </div>
       )
     }
-    console.log(data);
     return (
         <div>
             <div className="relative justify-center flex items-center">
@@ -43,8 +30,8 @@ const  ItemHome : React.FC = () => {
             </div>
                 <div className="mx-auto sm:px-40 sm:py-10">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-12">
-                        {data.map((item : ItemClass,index : React.Key | null | undefined ) => (
-                            <Link key={index} to={`/itemDetails/${item.id}`} state={{item :item}} >
+                        {data.map((item ) => (
+                            <Link  to={`/itemDetails/${item.id}`} state={{item :item}} >
                                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                                     <img
                                         src={item.image}

@@ -6,7 +6,6 @@ const Nous = () => {
 
     return (
         <div>
-            <NavBar scrollToContent={scrollToContent} />
             <div className="bg-white">
                 <h1 className="text_nav text-2xl leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">منتجات نوتر</h1>
                 <div className="relative justify-center flex items-center">

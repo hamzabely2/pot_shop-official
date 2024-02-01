@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import Cart from '../../page/pageUser/cart/cart';
 
 const navigation = [
-    { name: 'Home', to: '/', current: false },
-    { name: 'Collections', to: '/collection', current: false },
-    { name: 'Plus sur les pots', to: '/nous', current: false },
-    { name: 'Produits', to: '/item', current: false },
+    { name: 'Home', to: 'public/home', current: false },
+    { name: 'Collections', to: 'public/collection', current: false },
+    { name: 'Plus sur les pots', to: 'public/nous', current: false },
+    { name: 'Produits', to: 'public/item', current: false },
 ];
 
 const navigationConnexion = [
@@ -18,7 +18,7 @@ const navigationConnexion = [
 
 export default function NavBar({ scrollToContent, contact }) {
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [connected, setConnected] = useState(false);
+    const [connected, setConnected] = useState(true);
 
     const openCart = () => {
         setIsCartOpen(true);

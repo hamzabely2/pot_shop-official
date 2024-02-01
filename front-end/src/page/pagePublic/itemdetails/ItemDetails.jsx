@@ -2,14 +2,13 @@ import React from 'react';
 import NavBar from '../../../components/navBar/NavBar.jsx';
 import { Link, useLocation } from 'react-router-dom'
 
-const ItemDetails : React.FC  =( ) => {
+const ItemDetails  =( ) => {
   let location = useLocation();
   const { item } = location.state
   const scrollToContent = null
 
   return (
       <div>
-      <NavBar scrollToContent={scrollToContent} contact={false}/>
         <div className="bg-white p-5">
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Présentation du produit</h2>

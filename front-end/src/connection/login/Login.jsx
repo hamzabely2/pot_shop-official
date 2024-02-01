@@ -34,7 +34,7 @@ const Login = () => {
                 }, 200)
                 let token =  response.data.result
                 setCookie("token", token,7);
-                navigate("/")
+                navigate("public/home")
             }
             if (response.response.status === 400) {
                 ToastError(response.response.data.message);
@@ -69,7 +69,7 @@ const Login = () => {
 
                     <div className="flex bg-image h-screen w-screen items-center justify-center backdrop-blur-xl  bg-cover bg-no-repeat"
                          style={backgroundStyle}>
-                        <Link to={"/"} className="bg-white absolute flex p-2 rounded-md m-5 bottom-[750px] left-0">
+                        <Link to="/public/home" className="bg-white absolute flex p-2 rounded-md m-5 bottom-[750px] left-0">
                             <img className="w-5 m-1" alt="icons_flèche_gauche" src="/img/icons/icons_flèche_gauche.png"></img>
                             <p className="m-1 font-medium ">Home</p>
                         </Link>

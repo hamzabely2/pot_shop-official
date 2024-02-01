@@ -1,13 +1,8 @@
 import React, { Fragment, useState  } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {LuShoppingCart} from "react-icons/lu";
-interface CartProps {
-    isOpen: boolean;
-    openModal: () => void;
-    closeModal: () => void;
-}
 
-const Cart: React.FC<CartProps> = ({ isOpen, openModal, closeModal }) => {
+const Cart = ({ isOpen, openModal, closeModal }) => {
 
 
 

@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import NavBar from '../../components/navBar/NavBar';
+import NavBar from '../../../components/navBar/NavBar';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -56,12 +56,6 @@ const filters = [
   },
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-
-
 export default function Item() {
 
   const scrollToContent = null
@@ -70,7 +64,6 @@ export default function Item() {
 
   return (
       <div className="bg-white">
-        <NavBar scrollToContent={scrollToContent}/>
         <div>
           <div className="relative justify-center flex items-center">
             <div className=""><img alt="image de decoration" className="w-40 mr-4" src="/img/decoration/decoration_right.jpg"></img></div>
@@ -208,14 +201,15 @@ export default function Item() {
                               {({ active }) => (
                                   <a
                                       href={option.href}
-                                      className={classNames(
-                                          option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                          active ? 'bg-gray-100' : '',
-                                          'block px-4 py-2 text-sm'
-                                      )}
+                                      className={`${
+                                          option.current ? 'font-medium text-gray-900' : 'text-gray-500'
+                                      } ${
+                                          active ? 'bg-gray-100' : ''
+                                      } block px-4 py-2 text-sm`}
                                   >
                                     {option.name}
                                   </a>
+
                               )}
                             </Menu.Item>
                         ))}

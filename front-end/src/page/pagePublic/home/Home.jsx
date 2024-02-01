@@ -4,7 +4,6 @@ import StrongPoint from "../pointFort/StrongPoint";
 import Item from "../itemHome/ItemHome.jsx";
 import {ToastContainer} from "react-toastify";
 import Header from "../../../components/header/Header";
-import NavBar from "../../../components/navBar/NavBar.jsx";
 import Contact from "../../../components/contact/Contact.jsx";
 
 const Home = () => {
@@ -27,8 +26,6 @@ const Home = () => {
     };
     return (
         <div>
-            <NavBar scrollToContent={scrollToContent} contact={contact} />
-
             <ToastContainer
                 position="top-right"
                 autoClose={5000}

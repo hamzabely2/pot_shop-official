@@ -15,8 +15,10 @@ const scrollToContent = null
 export default function Collection() {
   return (
       <div className="bg-white">
-        <NavBar scrollToContent={scrollToContent} contact={false}/>
-        <h1 className="text_nav text-2xl leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">ليه بوتس دي الصحراء</h1>
+        <div className="d-flex justify-center">
+          <h1 className="text_nav  text-2xl leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">ليه بوتس دي الصحراء</h1>
+
+        </div>
         <div className="relative justify-center flex items-center">
           <div className=""><img alt="image de decoration" className="w-40 mr-4" src="/img/decoration/decoration_right.jpg"></img></div>
           <h2 className="text_nav leading-7 text.black sm:truncate sm:text-3xl ">Notre collection du jour</h2>
