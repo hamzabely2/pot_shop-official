@@ -46,30 +46,14 @@ namespace Context.Migrations
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Adresses");
-                });
-
-            modelBuilder.Entity("Entity.Model.AdressUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("AdressId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("AdressUsers");
+                    b.ToTable("Adresses");
                 });
 
             modelBuilder.Entity("Entity.Model.Cart", b =>
@@ -78,40 +62,31 @@ namespace Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Subtotal")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("Entity.Model.CartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Entity.Model.Category", b =>
@@ -287,7 +262,7 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("OrderStatus")
@@ -302,12 +277,14 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<float>("TotalAmount")
+                        .HasColumnType("float");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -329,8 +306,8 @@ namespace Context.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<float>("Subtotal")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -412,39 +389,30 @@ namespace Context.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Entity.Model.AdressUser", b =>
+            modelBuilder.Entity("Entity.Model.Adress", b =>
                 {
-                    b.HasOne("Entity.Model.Adress", "Adress")
-                        .WithMany("Adresses_Users")
-                        .HasForeignKey("AdressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entity.Model.User", "Users")
-                        .WithMany("Adresses_Users")
+                    b.HasOne("Entity.Model.User", null)
+                        .WithMany("Adresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Adress");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Entity.Model.Cart", b =>
                 {
-                    b.HasOne("Entity.Model.User", null)
-                        .WithOne("Cart")
-                        .HasForeignKey("Entity.Model.Cart", "UserId")
+                    b.HasOne("Entity.Model.Item", "Items")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Entity.Model.CartItem", b =>
-                {
-                    b.HasOne("Entity.Model.Cart", null)
-                        .WithMany("Items")
-                        .HasForeignKey("CartId");
+                    b.HasOne("Entity.Model.User", null)
+                        .WithMany("Cart")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Entity.Model.Comment", b =>
@@ -524,16 +492,6 @@ namespace Context.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Entity.Model.Adress", b =>
-                {
-                    b.Navigation("Adresses_Users");
-                });
-
-            modelBuilder.Entity("Entity.Model.Cart", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("Entity.Model.Category", b =>
                 {
                     b.Navigation("Items");
@@ -571,10 +529,9 @@ namespace Context.Migrations
 
             modelBuilder.Entity("Entity.Model.User", b =>
                 {
-                    b.Navigation("Adresses_Users");
+                    b.Navigation("Adresses");
 
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Cart");
 
                     b.Navigation("Comments");
 

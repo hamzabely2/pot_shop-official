@@ -29,7 +29,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ColorDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> GetAllColor()
         {
             try
             {
@@ -54,7 +54,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ColorDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Create(ColorDto request)
+        public async Task<ActionResult> CreateColor(ColorDto request)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ColorDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Delete(int colorId)
+        public async Task<ActionResult> DeleteColor(int colorId)
         {
             try
             {

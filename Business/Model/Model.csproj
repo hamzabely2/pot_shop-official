@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Order\" />
+    <ProjectReference Include="..\..\Data\Entity\Entity.csproj" />
   </ItemGroup>
 
 </Project>

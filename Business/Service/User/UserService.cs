@@ -53,9 +53,7 @@ namespace Service.User
         /// </summary>
         /// <returns></returns>
         public async Task<List<Entity.Model.User>> GetAllUsers()
-        {
-            try
-            {
+        {         
                 var users = await _userRepository.GetAllAsync().ConfigureAwait(false);
 
                 if (users == null || !users.Any())
@@ -63,12 +61,13 @@ namespace Service.User
                     throw new ArgumentException("La récupération des utilisateurs a échoué ou la liste est vide.");
                 }
 
+                if (users != null)
+                {
                 return users.ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Une erreur s'est produite lors de la récupération des utilisateurs.", ex);
-            }
+                }   
+               
+                throw new Exception("Une erreur s'est produite lors de la récupération des utilisateurs.");
+            
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace Service.User
             var passwordHash = _connectionService.HashPassword(request.Password);
             var newUser = UserMapper.TransformDtoRegister(request, passwordHash);
 
-            //create user
+            
             var user = await _userRepository.CreateElementAsync(newUser).ConfigureAwait(false);
             if (user == null)
                 throw new ArgumentException("l'enregistrement n'a pas réussi, quelque chose s'est mal passé");
@@ -112,7 +111,6 @@ namespace Service.User
                 throw new ArgumentException("L'enregistrement n'a pas réussi, quelque chose s'est mal passé lors de l'attribution du rôle");
             }
 
-            //adding info user of a token 
             var claims = new List<Claim>
             {
             new Claim(ClaimTypes.NameIdentifier, Convert.ToString(user.Id)),
@@ -132,6 +130,7 @@ namespace Service.User
 
             //create token
             var token = _connectionService.CreateToken(claims);
+            _connectionService.AddTokenCookie(new JwtSecurityTokenHandler().WriteToken(token), _httpContextAccessor);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -149,8 +148,6 @@ namespace Service.User
             {
                 throw new ArgumentException($"La connexion a échoué : e-mail ou mot de passe incorrect.");
             }
-
-
             var role = _roleRepository.GetRole(user.Id); ;
             var claims = new List<Claim>
                 {
@@ -161,9 +158,18 @@ namespace Service.User
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-
             var token = _connectionService.CreateToken(claims);
 
+            // Ajouter le token à un cookie en utilisant _httpContextAccessor
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(1),
+                HttpOnly = true,
+                Secure = true,
+                Domain = "example.com" // Remplacez par votre domaine réel
+            };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -174,7 +180,7 @@ namespace Service.User
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> Update(UserUpdate request)
+        public async Task<UserRead> UpdateUser(UserUpdate request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userConnectedId = userInfo.Id;
@@ -206,7 +212,7 @@ namespace Service.User
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> UpdatePassword(UserPassword request)
+        public async Task<UserRead> UpdatePasswordUser(UserPassword request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userConnectedId = userInfo.Id;
@@ -241,7 +247,7 @@ namespace Service.User
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> Delete(int userId)
+        public async Task<UserRead> DeleteUser(int userId)
         {
             var user = await _userRepository.GetByKeys(userId);
 

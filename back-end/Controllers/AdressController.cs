@@ -25,11 +25,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(AdressRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult<AdressRead>> FuncAdd(AdressAdd request)
+        public async Task<ActionResult<AdressRead>> CreateAdress(AdressAdd request)
         {
             try
             {
-                AdressRead result = await _adressService.Add(request);
+                AdressRead result = await _adressService.CreateAdress(request);
                 string message = "l'adresse a été ajoutée avec succès";
                 return Ok(new { message, result });
             }
@@ -46,11 +46,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(AdressRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncAdd()
+        public async Task<ActionResult> GetAddressesOfAUser()
         {
             try
             {
-                List<AdressRead> result = await _adressService.GetAddresseForUser();
+                IEnumerable<AdressRead> result = await _adressService.GetAddressesOfAUser();
                 string message = "les adresses de cet utilisateur";
                 return Ok(new { message, result });
             }
@@ -59,6 +59,7 @@ namespace back_end.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
         /// update addresse <summary>
         /// </summary>
         /// <param name="request"></param>
@@ -68,11 +69,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(AdressRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncUpdate(AdressAdd request, int adressId)
+        public async Task<ActionResult> UpdateAdress(AdressPut request, int adressId)
         {
             try
             {
-                AdressRead result = await _adressService.Update(request, adressId);
+                AdressRead result = await _adressService.UpdateAdress(request, adressId);
                 string message = "la modification  de l'adresse a réussi";
                 return Ok(new { message, result });
             }
@@ -90,11 +91,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(AdressRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncDelete(int id)
+        public async Task<ActionResult> DeleteAdress(int id)
         {
             try
             {
-                var result = await _adressService.Delete(id);
+                var result = await _adressService.DeleteAdress(id);
                 string message = "la suppression de l'adresse a réussi";
                 return Ok(new { message, result });
             }

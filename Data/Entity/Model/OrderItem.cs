@@ -8,5 +8,5 @@ public partial class OrderItem
     public int Id { get; set; }
     public Item Item { get; set; }
     public int Quantity { get; set; }
-    public decimal Subtotal { get; set; }
+    public float? Subtotal { get; set; } = 0;
 }

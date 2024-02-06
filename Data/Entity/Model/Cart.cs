@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Entity.Model
 {
-    public class Cart
+    public partial class Cart
     {
         public int Id { get; set; } 
-
         public int UserId { get; set; }
-
         public int ItemId { get; set; }
-        public float Price { get; set; }
-        public int Quantity { get; set; }
-
-        public List<CartItem> Items { get; set; } = new List<CartItem>();
+        public int Quantity { get; set; } = 0;
+        public float? Subtotal { get; set; } = 0;
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdateDate { get; set; }
+        public virtual Item Items { get; set; }     
     }
 }

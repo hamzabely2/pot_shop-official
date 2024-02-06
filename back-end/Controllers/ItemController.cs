@@ -27,7 +27,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(IEnumerable<ItemDetailsDto>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetList()
+        public async Task<ActionResult> GetListItem()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(IEnumerable<ItemDetailsDto>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetById(int itemId)
+        public async Task<ActionResult> GetItemById(int itemId)
         {
             try
             {
@@ -63,16 +63,16 @@ namespace back_end.Controllers
             }
         }
 
-        /// add item <summary>
+        /// create item <summary>
         /// </summary>
         /// <param name="itemDto"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        [Authorize(Roles = RoleString.Admin)]
+        //[Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ItemDetailsDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Create(ItemAdd request)
+        public async Task<ActionResult> CreateItem(ItemAdd request)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ItemDetailsDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Update(ItemUpdate request, int itemId)
+        public async Task<ActionResult> UpdateItem(ItemUpdate request, int itemId)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace back_end.Controllers
             }
         }
 
-        /// delete item <summary>
+        /// delete item by id <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ItemDetailsDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Delete(int itemId)
+        public async Task<ActionResult> DeleteItem(int itemId)
         {
             try
             {

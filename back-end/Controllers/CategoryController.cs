@@ -25,7 +25,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(CategoryDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> GetAllCategory()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(CategoryDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Create(CategoryDto request)
+        public async Task<ActionResult> CreateCategory(CategoryDto request)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(CategoryDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Delete(int categoryId)
+        public async Task<ActionResult> DeleteCategory(int categoryId)
         {
             try
             {

@@ -24,19 +24,19 @@ namespace back_end.Controllers
             _cartService = cartService;
         }
 
-        /// add to cart <summary>
+        /// create to cart <summary>
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        [HttpPost("add")]
-        [ProducesResponseType(typeof(IEnumerable<CartItem>), 200)]
+        [HttpPost("create")]
+        [ProducesResponseType(typeof(IEnumerable<Task<CartItem>>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncAddToCard(AddCart request)
+        public async Task<ActionResult> CreateCart(AddCart request)
         {
             try
             {
-                var result = await _cartService.AddToCart(request).ConfigureAwait(false);
+                var result = await _cartService.CreateCart(request).ConfigureAwait(false);
                 string message = "l'article a été ajouté avec succès dans le panier";
                 return Ok(new { message, result });
             }
@@ -53,11 +53,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(IEnumerable<CartItem>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncGetCards()
+        public async Task<ActionResult> GetCartItemsByUserId()
         {
             try
             {
-                var result = await _cartService.GetCards().ConfigureAwait(false);
+                var result = await _cartService.GetCartItemsByUserId().ConfigureAwait(false);
                 string message = "la liste des artilces dans le panier";
                 return Ok(new { message, result });
             }
@@ -68,18 +68,18 @@ namespace back_end.Controllers
         }
 
 
-       /// delete item in the cards <summary>
+        /// delete item in the cards <summary>
         /// </summary>
         /// <returns></returns>
         [HttpDelete("delete/{itemId}")]
-        [ProducesResponseType(typeof(IEnumerable<Cart>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<CartItem>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncRemoveFromCart(int itemId)
+        public async Task<ActionResult> DeleteItemInTheCart(int itemId)
         {
             try
             {
-                var result = await _cartService.RemoveItem(itemId).ConfigureAwait(false);
+                var result = await _cartService.DeleteItemInTheCart(itemId).ConfigureAwait(false);
                 string message = "l'article a été supprime avec succès";
                 return Ok(new { message, result });
             }
