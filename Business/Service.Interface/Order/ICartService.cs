@@ -1,16 +1,17 @@
 ﻿
 using Entity.Model;
 using Model.Cart;
+using Model.Item;
 
 namespace Service.Interface.Order
 {
     public interface ICartService
     {
-        Task<CartItem> AddToCart(AddCart request);
+        Task<CartItem> CreateCart(AddCart request);
+        Task<IEnumerable<CartItem>> GetCartItemsByUserId();
+        Task<IEnumerable<CartItem>> DeleteItemInTheCart(int ItemId);
 
-        Task<List<CartItem>> GetCards();
-        Task<List<CartItem>> RemoveItem(int itemId);
 
-        //void CalculateCartTotal(Cart cart);
+        //void CalculateCartTotal(Cart cart);*/
     }
 }

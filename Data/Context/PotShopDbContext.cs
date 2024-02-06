@@ -15,10 +15,8 @@ namespace Context
         {
         }
 
-        public virtual DbSet<AdressUser> AdressUsers { get; set; } = null!;
         public virtual DbSet<Adress> Adresses { get; set; } = null!;
         public virtual DbSet<Cart> Carts { get; set; } = null!;
-        public virtual DbSet<CartItem> CartItems { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Color> Colors { get; set; } = null!; public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
@@ -30,8 +28,6 @@ namespace Context
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<RoleUser> UsersRoles { get; set; } = null!;
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql("server=localhost;database=potshop;uid=root", ServerVersion.Parse("5.7.36-mysql"));

@@ -9,11 +9,8 @@ namespace Repository.Interface.Order
 {
     public interface ICartRepository : IGenericRepository<Cart>
     {
-        Task SaveOrUpdate(Cart cart);
-        Task<List<CartItem>> AddOrUpdateItemInCart(int userId, CartItem newItem);
-        Task<List<CartItem>> GetCartItemsForUser(int userId);
-        Task<List<CartItem>> RemoveItemFromCart(int userId, int itemId);
-
-        Task<List<CartItem>> UpdateCartItemQuantity(int userId, int itemId, int newQuantity);
+        Task<List<Cart>> GetCartItemsByUserId(int userId);
+        Task<Cart> GetCartItemByUserIdAndItemId(int userId, int itemId);
+        Task DeleteCartItemsByUserId(int userId);
     }
 }

@@ -8,6 +8,7 @@ using Entity.Model;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using Service.Interface.User;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Service.User
 {
@@ -19,6 +20,18 @@ namespace Service.User
         {
             _configuration = configuration;
 
+        }
+        public void AddTokenCookie(string token, IHttpContextAccessor _httpContextAccessor)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(1),
+                HttpOnly = true,
+                Secure = true,
+                Domain = "www.potshopendcompany.com" 
+            };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("token", token, cookieOptions);
         }
 
         /// <summary>

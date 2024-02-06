@@ -25,12 +25,36 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncGetUser(string name)
+        public async Task<ActionResult> GetUserByName(string name)
         {
             try
             {
                 var result = await _userService.GetUserByName(name).ConfigureAwait(false);
                 string message = "user";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        /// get all users <summary>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("")]
+        //[Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(UserRead), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> GetAllUsers()
+        {
+            try
+            {
+                var result = await _userService.GetAllUsers().ConfigureAwait(false);
+                string message = "listes utilisateurs";
                 return Ok(new { message, result });
             }
             catch (Exception ex)
@@ -48,7 +72,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(StatusCodeResult), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<IActionResult> FuncRegister(UserRegister request)
+        public async Task<IActionResult> Register(UserRegister request)
         {
             try
             {
@@ -74,7 +98,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncLogin(UserLogin request)
+        public async Task<ActionResult> Login(UserLogin request)
         {
             try
             {
@@ -99,11 +123,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncUpdate(UserUpdate request)
+        public async Task<ActionResult> UpdateUser(UserUpdate request)
         {
             try
             {
-                var result = await _userService.Update(request);
+                var result = await _userService.UpdateUser(request);
                 string message = "utilisateur modifié avec succès";
                 return Ok(new { message, result });
             }
@@ -124,11 +148,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncUpdate(UserPassword request)
+        public async Task<ActionResult> UpdatePasswordUser(UserPassword request)
         {
             try
             {
-                var result = await _userService.UpdatePassword(request);
+                var result = await _userService.UpdatePasswordUser(request);
                 string message = "Le mot de passe a été changé avec succès";
                 return Ok(new { message, result });
             }
@@ -148,11 +172,11 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> FuncDelete(int userId)
+        public async Task<ActionResult> DeleteUser(int userId)
         {
             try
             {
-                var result = await _userService.Delete(userId);
+                var result = await _userService.DeleteUser(userId);
                 string message = "utilisateur supprimé avec succès";
                 return Ok(new { message, result });
             }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model.Order;
+using Entity.Model;
+
 
 namespace Service.Interface.Order
 {
     public interface IOrderService
     {
+        Task<ReadOrder> CreateOrderFromCart(AddOrder request);
+        Task<Entity.Model.Order> DeleteOrder(DeleteOrder request);
+        float? CalculateTotalAmount(List<OrderItem> orderItems);
+        Task<List<ReadOrder>> GetOrdersByUserId();
+
     }
 }

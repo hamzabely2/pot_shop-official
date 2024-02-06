@@ -12,11 +12,11 @@ namespace Entity.Model
         public string PasswordHash { get; set; }
         public string? PhoneNumber { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<AdressUser> Adresses_Users { get; set; }
+        public virtual ICollection<Adress> Adresses { get; set; }
         public virtual ICollection<RoleUser> Roles_Users { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
-        public virtual Cart Cart { get; set; }
+        public virtual ICollection<Cart> Cart { get; set; }
 
     }
 

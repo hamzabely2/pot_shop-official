@@ -9,10 +9,11 @@ namespace Model.Cart
 {
     public class AddCart
     {
+
         [Required(ErrorMessage = "insérez la item")]
         public int ItemId { get; set; }
 
-        [Required(ErrorMessage = "insérez la quantita")]
+        [Required(ErrorMessage = "insérez la quantite")]
         public int Quantity { get; set; }
     }
 }

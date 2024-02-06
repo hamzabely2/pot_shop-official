@@ -184,7 +184,6 @@ namespace Service.Item
             var materials = new List<string>
             {
                 "Argile rouge", "Argile blanche", "Argile chamottée", "Argile noire", "Argile grès",
-
             };
 
             foreach (var material in materials)

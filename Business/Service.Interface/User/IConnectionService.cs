@@ -13,5 +13,6 @@ namespace Service.Interface.User
         JwtSecurityToken CreateToken(IEnumerable<Claim> claims);
         bool IsPasswordValid(string password);
         UserInfo GetCurrentUserInfo(IHttpContextAccessor _httpContextAccessor);
+        void AddTokenCookie(string token, IHttpContextAccessor _httpContextAccessor);
     }
 }

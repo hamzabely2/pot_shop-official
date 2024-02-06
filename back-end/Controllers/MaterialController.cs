@@ -26,7 +26,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(MaterialDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> GetAllMaterial()
         {
             try
             {
@@ -51,7 +51,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(MaterialDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Create(MaterialDto request)
+        public async Task<ActionResult> CreateMaterial(MaterialDto request)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(MaterialDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> Delete(int materilId)
+        public async Task<ActionResult> DeleteMaterial(int materilId)
         {
             try
             {
@@ -89,9 +89,5 @@ namespace back_end.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
-
-
-
     }
 }

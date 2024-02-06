@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using Entity.Model;
 using Mapper.Adress;
 using Microsoft.AspNetCore.Http;
@@ -14,61 +15,59 @@ namespace Service.User
         private readonly AdressIRepository _adressRepository;
         private readonly IConnectionService _connectionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
 
 
-        public AdressService(AdressIRepository adressRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor)
+        public AdressService(AdressIRepository adressRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _adressRepository = adressRepository;
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
 
         }
 
-        /// add addresse <summary>
+        /// <summary> 
+        /// add  adress
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public async Task<AdressRead> Add(AdressAdd request)
+        /// <exception cref="ArgumentException">Le message d'exception.</exception>
+        public async Task<AdressRead> CreateAdress(AdressAdd request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
-            if (userInfo.Id == 0)
-                throw new ArgumentException("l'action a échoué :l'utilisateur ne existe pas");
 
-            var addresseToAdd = AdressMapper.TransformDtoAdd(request);
+            if (userId == 0)
+                throw new ArgumentException("L'action a échoué : l'utilisateur n'existe pas");
 
-            var addresse = await _adressRepository.CreateElementAsync(addresseToAdd).ConfigureAwait(false);
+            Adress addressEntity = _mapper.Map<Adress>(request);
+            addressEntity.UserId = userId;
 
-            bool AddAdresseToUser = await _adressRepository.AddAdressToUser(userId, addresseToAdd.Id);
-            if (AddAdresseToUser == false)
-                throw new ArgumentException("l'action a échoué : l'adresse n'a pas été trouvée");
+            Adress addedAddress = await _adressRepository.CreateElementAsync(addressEntity).ConfigureAwait(false);
 
-            return AdressMapper.TransformDtoExit(addresse);
+            return _mapper.Map<AdressRead>(addedAddress);
         }
+
+
 
         /// get addresse by user id <summary>
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<List<AdressRead>> GetAddresseForUser()
+        public async Task<IEnumerable<AdressRead>> GetAddressesOfAUser()
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
             if (userInfo.Id == 0)
                 throw new ArgumentException("l'action a échoué :l'utilisateur  ne existe pas");
 
-            var addresselist = await _adressRepository.GetAdressesForUser(userId).ConfigureAwait(false);
+            var addresselist = await _adressRepository.GetAdressesByUserId(userId).ConfigureAwait(false);
             if (addresselist == null)
                 throw new ArgumentException("l'action a échoué");
 
-            List<AdressRead> addresseDto = new();
-            foreach (Adress addresse in addresselist)
-            {
-                addresseDto.Add(AdressMapper.TransformDtoExit(addresse));
-            }
-            return addresseDto;
+            return _mapper.Map<IEnumerable<AdressRead>>(addresselist);
         }
 
         /// <summary>
@@ -78,26 +77,28 @@ namespace Service.User
         /// <param name="IdAddresse"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-
-        public async Task<AdressRead> Update(AdressAdd request, int IdAddress)
+        public async Task<AdressRead> UpdateAdress(AdressPut request, int IdAddress)
         {
-            var uniteGet = await _adressRepository.GetByKeys(IdAddress).ConfigureAwait(false);
-            if (uniteGet == null)
-                throw new ArgumentException("l'action a échoué : l'adresse n'a pas été trouvée");
+            var existingAddress = await _adressRepository.GetByKeys(IdAddress).ConfigureAwait(false);
+            if (existingAddress == null)
+                throw new ArgumentException("L'action a échoué : l'adresse n'a pas été trouvée");
 
-            var address = AdressMapper.TransformDtoUpdate(request, uniteGet);
-            var addressUpdate = await _adressRepository.UpdateElementAsync(address).ConfigureAwait(false);
-            return AdressMapper.TransformDtoExit(addressUpdate);
+            _mapper.Map(request, existingAddress);
+
+            var updatedAddress = await _adressRepository.UpdateElementAsync(existingAddress).ConfigureAwait(false);
+
+            return _mapper.Map<AdressRead>(updatedAddress);
         }
 
-        ///delete comment <summary>
+
+        ///delete adress <summary>
         /// </summary>
-        /// <param name="IdAddresse"></param>
+        /// <param name="IdAdresse"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<Adress> Delete(int IdAddress)
+        public async Task<Adress> DeleteAdress(int IdAdress)
         {
-            var address = await _adressRepository.GetByKeys(IdAddress);
+            var address = await _adressRepository.GetByKeys(IdAdress);
             if (address == null)
                 throw new ArgumentException("l'action a échoué : l'adresse n'a pas été trouvée");
 

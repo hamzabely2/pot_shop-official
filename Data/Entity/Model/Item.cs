@@ -19,6 +19,5 @@ namespace Entity.Model
         public virtual Material Materials { get; set; } = null!;
         public virtual Category Categories { get; set; } = null!;
         public virtual ICollection<ImageItem> ImagesItems { get; set; } = new List<ImageItem>();
-
     }
 }

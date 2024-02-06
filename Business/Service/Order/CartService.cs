@@ -1,15 +1,13 @@
-﻿using Context.Interface;
+﻿using AutoMapper;
+using Context.Interface;
 using Entity.Model;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Model.Cart;
-using Model.Item;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Interface.Item;
 using Repository.Interface.Order;
-using Service.Interface.Item;
 using Service.Interface.Order;
 using Service.Interface.User;
-using Service.User;
 
 namespace Service.Order
 {
@@ -20,59 +18,110 @@ namespace Service.Order
         private readonly ItemIRepository _itemRepository;
         private readonly IConnectionService _connectionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public CartService(PotShopIDbContext _idbcontext, ICartRepository cartRepository, ItemIRepository itemRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor)
+        public CartService(
+            IMapper mapper,
+            PotShopIDbContext _idbcontext,
+            ICartRepository cartRepository,
+            ItemIRepository itemRepository,
+            IConnectionService connectionService,
+            IHttpContextAccessor httpContextAccessor
+        )
         {
             _cartRepository = cartRepository;
             _table = _idbcontext;
             _itemRepository = itemRepository;
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
-
-
+            _mapper = mapper;
         }
-        public async Task<CartItem> AddToCart(AddCart request)
+
+        /// <summary>
+        /// create cart
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<CartItem> CreateCart(AddCart request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
 
-            Entity.Model.Item item = await _itemRepository.GetByKeys(request.ItemId) ?? throw new ArgumentException("L'action a échoué : l'article n'existe pas");
+            if (userId == 0)
+                throw new ArgumentException("L'action a échoué : l'utilisateur n'existe pas");
 
-            // Récupérer le panier de l'utilisateur
-            List<CartItem> userCart = await _cartRepository.AddOrUpdateItemInCart(userId, new CartItem
+            var item = await _itemRepository.GetByKeys(request.ItemId).ConfigureAwait(false);
+            if (item == null)
+                throw new ArgumentException("L'action a échoué : l'article n'a pas été trouvé");
+
+            var existingCartItem = await _cartRepository
+                .GetCartItemByUserIdAndItemId(userId, request.ItemId)
+                .ConfigureAwait(false);
+
+            if (existingCartItem != null)
             {
-                ItemId = item.Id,
-                Price = item.Price ?? 0,
-                Quantity = request.Quantity
-            });
+                existingCartItem.Quantity = request.Quantity;
+                existingCartItem.Subtotal = item.Price * request.Quantity;
+                existingCartItem.UpdateDate = DateTime.UtcNow;
+                await _cartRepository.UpdateElementAsync(existingCartItem).ConfigureAwait(false);
+                return _mapper.Map<CartItem>(existingCartItem);
+            }
 
-            // Retourner l'article ajouté ou mis à jour
-            return userCart.Last();
+            var cartEntity = _mapper.Map<Cart>(request);
+            cartEntity.UserId = userId;
+            cartEntity.Items = item;
+            cartEntity.Subtotal = item.Price * request.Quantity;
+
+            Cart cartAddress = await _cartRepository
+                .CreateElementAsync(cartEntity)
+                .ConfigureAwait(false);
+
+            return _mapper.Map<CartItem>(cartAddress);
         }
 
-
-
-
-        public async Task<List<CartItem>> GetCards()
+        /// <summary>
+        /// get cart by user
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<CartItem>> GetCartItemsByUserId()
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
-            var userCart = await _cartRepository.GetCartItemsForUser(userId).ConfigureAwait(false);
-        
-            return userCart;
 
+            var cartItems = await _cartRepository
+                .GetCartItemsByUserId(userId)
+                .ConfigureAwait(false);
+
+            return cartItems.Select(cart => _mapper.Map<CartItem>(cart));
         }
 
-        public async Task<List<CartItem>> RemoveItem( int itemId)
+        /// <summary>
+        /// delete item from the cart
+        /// </summary>
+        /// <param name="ItemId"></param>
+        /// <returns></returns>
+        /// <summary>
+        public async Task<IEnumerable<CartItem>> DeleteItemInTheCart(int ItemId)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
 
-            List<CartItem> updatedCart = await _cartRepository.RemoveItemFromCart(userId, itemId);
+            var cartItems = await _cartRepository.GetCartItemsByUserId(userId).ConfigureAwait(false);
 
-            return updatedCart;
+            var existingCartItem = cartItems.FirstOrDefault(item => item.ItemId == ItemId);
+            if(existingCartItem == null)
+            {
+                throw new Exception("L'action a échoué : l'article n'a pas été trouvé");
+            }
+            if (existingCartItem != null)
+            {
+                await _cartRepository.DeleteElementAsync(existingCartItem).ConfigureAwait(false);
+
+                return cartItems.Select(cart => _mapper.Map<CartItem>(cart)).ToList();
+            }
+
+            throw new Exception("L'action a échoué");
         }
-
-
     }
 }

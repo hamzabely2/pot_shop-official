@@ -1,42 +1,44 @@
-﻿using Model.Adress;
+﻿using AutoMapper;
+using Entity.Model;
+using Model.Adress;
+using Model.Cart;
+using Model.Order;
+using System.Collections.Generic;
 
 namespace Mapper.Adress
 {
-    public class AdressMapper
+    public class AdressMapper : Profile
     {
-        public static AdressRead TransformDtoExit(Entity.Model.Adress address)
+        public AdressMapper()
         {
-            return new AdressRead()
-            {
-                City = address.City,
-                State = address.State,
-                Code = address.Code,
-                Street = address.Street,
-            };
-        }
+            //adress mapper
+            CreateMap<AdressAdd, Entity.Model.Adress>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+            CreateMap<Entity.Model.Adress, AdressRead>();
 
-        public static Entity.Model.Adress TransformDtoAdd(AdressAdd request)
-        {
-            return new Entity.Model.Adress()
-            {
-                City = request.City,
-                State = request.State,
-                Code = request.Code,
-                Street = request.Street,
-                CreatedDate = DateTime.Now,
-                UpdateDate = DateTime.Now,
-            };
-        }
+            CreateMap<AdressPut, Entity.Model.Adress>()
+                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-        public static Entity.Model.Adress TransformDtoUpdate(AdressAdd request, Entity.Model.Adress uniteGet)
-        {
-            uniteGet.State = request.State;
-            uniteGet.Street = request.Street;
-            uniteGet.City = request.City;
-            uniteGet.Code = request.Code;
-            uniteGet.UpdateDate = DateTime.Now;
+            //cart mapper
+            CreateMap<Cart, ReadCart>();
+            CreateMap<AddCart, Cart>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-            return uniteGet;
+            CreateMap<Cart, CartItem>();
+
+            //order mapper
+            CreateMap<Order,ReadOrder>();
+
+            CreateMap<Cart, OrderItem>()
+            .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Items))
+            .ReverseMap();
+
+            CreateMap<CartItem, OrderItem>()
+           .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Items));
         }
     }
 }

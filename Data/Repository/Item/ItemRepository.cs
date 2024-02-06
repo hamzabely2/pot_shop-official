@@ -25,7 +25,7 @@ namespace Repository.Item
             return item;
         }
 
-        /// get b name   <summary>
+        /// get detail suer name   <summary>
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -39,5 +39,13 @@ namespace Repository.Item
                 .Include(i => i.ImagesItems)
                     .ThenInclude(ii => ii.Images).ToList();
         }
+
+        public async Task<Entity.Model.Item> GetItemDetailsByIdAsync(int itemId)
+        {
+            // Vous devriez implémenter le code pour récupérer les détails de l'Item à partir de votre base de données
+            // Par exemple, si vous utilisez Entity Framework Core, cela pourrait ressembler à ceci :
+            return await _table.FirstOrDefaultAsync(item => item.Id == itemId);
+        }
+
     }
 }

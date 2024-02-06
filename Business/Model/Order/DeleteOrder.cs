@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mapper.Basket
+namespace Model.Order
 {
-    internal class BasketMapper
+    public class DeleteOrder
     {
+        public int OrderId { get; set; }
     }
 }
