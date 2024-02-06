@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Context.Interface
 {
     public interface PotShopIDbContext : IDb
-    {
-        DbSet<AdressUser> AdressUsers { get; set; }
+    {        
         DbSet<Adress> Adresses { get; set; }
         DbSet<Cart> Carts { get; set; }
-        DbSet<CartItem> CartItems { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Color> Colors { get; set; }
         DbSet<Comment> Comments { get; set; }

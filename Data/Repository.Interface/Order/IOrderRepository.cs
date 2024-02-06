@@ -9,5 +9,6 @@ namespace Repository.Interface.Order
 {
     public interface IOrderRepository : IGenericRepository<Entity.Model.Order>
     {
+        Task<List<Entity.Model.Order>> GetOrdersByUserId(int userId);
     }
 }

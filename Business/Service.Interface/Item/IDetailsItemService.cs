@@ -16,6 +16,7 @@ namespace Service.Interface.Item
         Task<List<ColorDto>> GetAllColor();
         Task<ColorDto> CreateColor(ColorDto request);
         Task<ColorDto> DeleteColor(int colorId);
+
         /// <summary>
         /// crud for category
         /// </summary>
@@ -23,6 +24,7 @@ namespace Service.Interface.Item
         Task<List<CategoryDto>> GetAllCategory();
         Task<CategoryDto> CreateCategory(CategoryDto request);
         Task<CategoryDto> DeleteCategory(int categoryId);
+
         /// <summary>
         /// crud for material
         /// </summary>

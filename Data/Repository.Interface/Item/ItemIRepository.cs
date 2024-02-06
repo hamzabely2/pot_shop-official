@@ -6,5 +6,6 @@ namespace Repository.Interface.Item
     {
         List<Entity.Model.Item> GetItemsWithDetails();
         Task<Entity.Model.Item> GetItemByName(string name);
+        Task<Entity.Model.Item> GetItemDetailsByIdAsync(int itemId);
     }
 }
