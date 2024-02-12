@@ -83,7 +83,7 @@ namespace back_end.Controllers
             }
         }
 
-        /// delete comment <summary>
+        /// delete adress <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

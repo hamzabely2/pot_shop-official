@@ -1,12 +1,7 @@
 ﻿using Entity.Model;
-using Mapper.Item;
 using Mapper.User;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Model.Item;
 using Model.User;
-using Org.BouncyCastle.Utilities;
-using Repository.Interface.Item;
 using Repository.Interface.User;
 using Service.Interface.User;
 using System.IdentityModel.Tokens.Jwt;
@@ -34,19 +29,21 @@ namespace Service.User
 
         }
 
-        /// get user by name <summary>
+        /// get user <summary>
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> GetUserByName(string name)
+        public async Task<Entity.Model.User> GetUserByName()
         {
-            Entity.Model.User user = await _userRepository.GetUserByName(name).ConfigureAwait(false);
-            if (user == null)
-                throw new ArgumentException($"le user {name} ne existe pas.");
+            UserInfo userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
+            int userConnectedId = userInfo.Id;
 
-            return UserMapper.TransformDtoExit(user);
+            Entity.Model.User user = await _userRepository.GetByKeys(userConnectedId).ConfigureAwait(false);
+         
+            return user;
         }
+
 
 
         /// get all users <summary>

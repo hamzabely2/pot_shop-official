@@ -2,6 +2,8 @@
 using Entity.Model;
 using Model.Adress;
 using Model.Cart;
+using Model.DetailsItem;
+using Model.Item;
 using Model.Order;
 using System.Collections.Generic;
 
@@ -39,6 +41,19 @@ namespace Mapper.Adress
 
             CreateMap<CartItem, OrderItem>()
            .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Items));
+
+            // item mapper
+            CreateMap<Entity.Model.Item, ReadItem>();
+            CreateMap<ItemAdd, Entity.Model.Item>();
+
+            CreateMap<Category, CategoryDto>();
+            CreateMap<Color, ColorDto>();
+            CreateMap<Material, MaterialDto>();
+
+            CreateMap<Image, ImageDto>();
+            CreateMap<ItemUpdate, Entity.Model.Item>();
+
+
         }
     }
 }

@@ -23,16 +23,7 @@ namespace Model.Item
         public int? Material { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer la categoty")]
-        public int? Category { get; set; }
-
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? FrontImage { get; set; }
-
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? FullImage { get; set; }
-
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? SideImage { get; set; }
+        public int? Category { get; set; }      
         public DateTime UpdateDate { get; set; }
 
 

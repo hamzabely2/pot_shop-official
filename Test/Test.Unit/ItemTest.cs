@@ -58,7 +58,7 @@ namespace Api.Test.Unit
                 CategoryId = 1,
                 ColorId = 1,
                 MaterialId = 1,
-                Stock = true,
+                Stock = 55,
                 Description = "description",
             };
             // Act

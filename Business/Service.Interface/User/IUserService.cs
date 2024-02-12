@@ -6,7 +6,7 @@ namespace Service.Interface.User
     public interface IUserService
     {
         Task<List<Entity.Model.User>> GetAllUsers();
-        Task<UserRead> GetUserByName(string name);
+        Task<Entity.Model.User> GetUserByName();
         Task<string> Register(UserRegister request);
         Task<string> Login(UserLogin request);
         Task<UserRead> UpdateUser(UserUpdate request);

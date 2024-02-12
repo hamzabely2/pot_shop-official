@@ -14,26 +14,20 @@ namespace Model.Item
         public float? Price { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer la disponibilité de l'artcile")]
-        public bool? Stock { get; set; }
+        public int? Stock { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer la categoty")]
-        public int? Category { get; set; }
+        public int? CategoryId { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer un color")]
-        public int? Color { get; set; }
+        public int? ColorId { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer le type de material")]
-        public int? Material { get; set; }
+        public int? MaterialId { get; set; }
 
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? FrontImage { get; set; }
+        [Required(ErrorMessage = "Veuillez insere un image")]
+        public byte[]? ImagesData { get; set; }
 
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? FullImage { get; set; }
-
-        [Required(ErrorMessage = "Veuillez un image")]
-        public string? SideImage { get; set; }
-        public DateTime UpdateDate { get; set; }
 
     }
 }

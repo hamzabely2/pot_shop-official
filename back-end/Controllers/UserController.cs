@@ -16,20 +16,23 @@ namespace back_end.Controllers
             _userService = userService;
         }
 
-        /// get user by name <summary>
+    
+
+
+        /// get user  <summary>
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("{name}")]
-        [Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(UserRead), 200)]
+        [HttpGet("name")]
+        [Authorize(Roles = RoleString.User)]
+        [ProducesResponseType(typeof(Entity.Model.User), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> GetUserByName(string name)
+        public async Task<ActionResult> GetUserByName()
         {
             try
             {
-                var result = await _userService.GetUserByName(name).ConfigureAwait(false);
+                var result = await _userService.GetUserByName().ConfigureAwait(false);
                 string message = "user";
                 return Ok(new { message, result });
             }

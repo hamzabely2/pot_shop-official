@@ -36,6 +36,7 @@ namespace Ioc.Api
             services.AddScoped<RoleUserIRepository, RoleUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ImageIRepository, ImageRepository>();
 
 
             return services;

@@ -16,7 +16,7 @@ namespace Test.Common
                 CategoryId = 1,
                 ColorId = 1,
                 MaterialId = 1,
-                Stock = true
+                Stock = 55
             };
             var item2 = new Item
             {
@@ -27,7 +27,7 @@ namespace Test.Common
                 CategoryId = 1,
                 ColorId = 1,
                 MaterialId = 1,
-                Stock = true
+                Stock = 55
             };
             idbContext.Items.AddRange(item1, item2);
             idbContext.SaveChanges();

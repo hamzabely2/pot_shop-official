@@ -11,7 +11,6 @@ namespace Context.Interface
         DbSet<Color> Colors { get; set; }
         DbSet<Comment> Comments { get; set; }
         DbSet<Image> Images { get; set; }
-        DbSet<ImageItem> ImagesItems { get; set; }
         DbSet<Item> Items { get; set; }
         DbSet<Material> Materials { get; set; }
         DbSet<Order> Orders { get; set; }

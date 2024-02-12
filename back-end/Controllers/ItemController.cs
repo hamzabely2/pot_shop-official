@@ -24,7 +24,7 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet()]
-        [ProducesResponseType(typeof(IEnumerable<ItemDetailsDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ReadItem>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetListItem()
@@ -46,7 +46,7 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{itemId}")]
-        [ProducesResponseType(typeof(IEnumerable<ItemDetailsDto>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ReadItem>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetItemById(int itemId)
@@ -69,7 +69,7 @@ namespace back_end.Controllers
         /// <returns></returns>
         [HttpPost("create")]
         //[Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(ItemDetailsDto), 200)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> CreateItem(ItemAdd request)
@@ -92,15 +92,15 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("update/{itemId}")]
-        [Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(ItemDetailsDto), 200)]
+        //[Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> UpdateItem(ItemUpdate request, int itemId)
         {
             try
             {
-                var result = await _itemService.UpdateItem(request, itemId);
+                var result = await _itemService.UpdateItem(itemId,request);
                 string message = "article a été modifie avec succès";
                 return Ok(new { message, result });
             }
@@ -115,8 +115,8 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("delete/{itemId}")]
-        [Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(ItemDetailsDto), 200)]
+       //[Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> DeleteItem(int itemId)

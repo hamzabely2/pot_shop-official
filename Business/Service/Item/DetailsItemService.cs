@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using Context.Interface;
 using Entity.Model;
 using Mapper.DetailsItem;
@@ -22,8 +23,6 @@ namespace Service.Item
             _colorRepository = colorRepository;
             _categoryRepository = categoryRepository;
             _materialRepository = materialRepository;
-
-
         }
 
         /// <summary>

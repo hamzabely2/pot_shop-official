@@ -15,6 +15,7 @@ namespace Repository.User
             _table = _idbcontext.Set<Entity.Model.User>();
         }
 
+
         /// get user by name   <summary>
         /// </summary>
         /// <param name="name"></param>

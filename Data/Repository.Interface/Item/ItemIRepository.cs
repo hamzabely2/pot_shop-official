@@ -4,8 +4,9 @@ namespace Repository.Interface.Item
 {
     public interface ItemIRepository : IGenericRepository<Entity.Model.Item>
     {
-        List<Entity.Model.Item> GetItemsWithDetails();
         Task<Entity.Model.Item> GetItemByName(string name);
         Task<Entity.Model.Item> GetItemDetailsByIdAsync(int itemId);
+        Task<Entity.Model.Item> GetItemByIdWithDetails(int itemId);
+        Task<List<byte[]>> GetAllImagesForItem(int itemId);
     }
 }

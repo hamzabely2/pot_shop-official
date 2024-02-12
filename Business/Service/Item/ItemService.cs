@@ -1,6 +1,8 @@
-﻿
+﻿using AutoMapper;
 using Context.Interface;
+using Entity.Model;
 using Mapper.Item;
+using Model.DetailsItem;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
@@ -10,14 +12,24 @@ namespace Service.Item
     public class ItemService : IItemService
     {
         private readonly ItemIRepository _itemRepository;
+        private readonly ImageIRepository _imageRepository;
         private readonly IDetailsItemService _detailsItemIService;
         private readonly PotShopIDbContext _table;
+        private readonly IMapper _mapper;
 
-        public ItemService(PotShopIDbContext _idbcontext, ItemIRepository itemRepository, IDetailsItemService detailsItemIService)
+        public ItemService(
+            ImageIRepository imageRepository,
+            PotShopIDbContext _idbcontext,
+            ItemIRepository itemRepository,
+            IDetailsItemService detailsItemIService,
+            IMapper mapper
+        )
         {
             _itemRepository = itemRepository;
             _detailsItemIService = detailsItemIService;
             _table = _idbcontext;
+            _mapper = mapper;
+            _imageRepository = imageRepository;
         }
 
         private async void AddingItemDetails()
@@ -32,129 +44,165 @@ namespace Service.Item
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<ItemDetailsDto> GetItemById(int itemId)
+        public async Task<ReadItem> GetItemById(int itemId)
         {
             AddingItemDetails();
-            var items = _itemRepository.GetItemsWithDetails();
-            var item = items.FirstOrDefault(item => item.Id == itemId);
+
+            var item = await _itemRepository.GetItemByIdWithDetails(itemId).ConfigureAwait(false);
 
             if (item == null)
-                throw new ArgumentException("l'action a échoué: l'article ne existe pas");
+            {
+                throw new ArgumentException("L'articles n'a pas ete trouve non trouvé.");
+            }
+            var images = await _itemRepository.GetAllImagesForItem(itemId).ConfigureAwait(false);
 
-            return ItemMapper.TransformDtoExitWithDetails(item);
+            if (images.Any())
+            {
+                item.Images.AddRange(images);
+            }
+            var readItem = _mapper.Map<ReadItem>(item);
+
+            return readItem;
         }
 
         /// list items> <summary>
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ItemDetailsDto>> GetListItem()
+        public async Task<List<ReadItem>> GetListItem()
         {
             AddingItemDetails();
 
-            var items = _itemRepository.GetItemsWithDetails();
-            if (items == null)
-                throw new ArgumentException("l'action a échoué");
+            var items = await _itemRepository.GetAllAsync().ConfigureAwait(false);
 
-            return items.Select(item => ItemMapper.TransformDtoExitWithDetails(item)).ToList();
+            if (items == null)
+            {
+                throw new ArgumentException("Aucun article trouvé.");
+            }
+
+            var itemDetailsDtos = new List<ReadItem>();
+
+            foreach (var item in items)
+            {
+                var readItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+                itemDetailsDtos.Add(readItem);
+            }
+
+            return itemDetailsDtos;
         }
 
         /// add item <summary>
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<ItemDetailsDto> CreateItem(ItemAdd request)
+
+        public async Task<ReadItem> CreateItem(ItemAdd request)
         {
-            AddingItemDetails();
+            var existingItem = await _itemRepository.GetItemByName(request.Name).ConfigureAwait(false);
+            if (existingItem != null)
+            {
+                throw new ArgumentException("L'action a échoué : Le nom de l'article existe déjà.");
+            }
 
-            var itemToAdd = ItemMapper.TransformDtoAdd(request);
-            var items = _itemRepository.GetItemsWithDetails();
+            if (request.CategoryId == 0 || request.MaterialId == 0 || request.ColorId == 0)
+            {
+                throw new ArgumentException("L'action a échoué : Les détails de l'article n'ont pas été précisés.");
+            }
 
-            bool NameExiste = items.Any(NameExiste => NameExiste.Name == itemToAdd.Name);
-            if (NameExiste == true)
-                throw new ArgumentException("l'action a échoué: Le nom de l'article existe déjà.");
+            var newItem = _mapper.Map<Entity.Model.Item>(request);
+            newItem.CreatedDate = DateTime.Now;
+            newItem.UpdateDate = DateTime.Now;
 
-            if (itemToAdd.CategoryId == 0 || itemToAdd.MaterialId == 0 || itemToAdd.ColorId == 0)
-                throw new ArgumentException("l'action a échoué: Les détails de l'article n'ont pas été précisés.");
+            await _itemRepository.CreateElementAsync(newItem).ConfigureAwait(false);
 
-            Entity.Model.Item itemAdd = await _itemRepository.CreateElementAsync(itemToAdd).ConfigureAwait(false);
+            var createdItem = await GetItemDetails(newItem.Id).ConfigureAwait(false);
 
-            if (itemAdd == null)
-                throw new ArgumentException("l'action a échoué");
-
-
-            return ItemMapper.TransformDtoExitWithDetails(itemAdd);
+            return createdItem;
         }
+
 
         /// Update item <summary>
         /// </summary>
         /// <param name="request"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        /// 
-        public async Task<ItemDetailsDto> UpdateItem(ItemUpdate request, int itemId)
+        ///
+        public async Task<ReadItem> UpdateItem(int itemId, ItemUpdate request)
         {
-            AddingItemDetails();
+            var existingItem = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
 
-            var uniteGet = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
-            if (uniteGet == null)
-                throw new ArgumentException("l'action a échoué : l'artcles n'a pas été trouvée");
+            if (existingItem == null)
+            {
+                throw new ArgumentException("Article non trouvé.");
+            }
 
-            var item = _itemRepository.GetItemsWithDetails();
+            _mapper.Map(request, existingItem);
+            existingItem.UpdateDate = DateTime.UtcNow;
 
-            if (request.Category == 0 || request.Material == 0 || request.Color == 0)
-                throw new ArgumentException("l'action a échoué: Les détails de l'article n'ont pas été précisés.");
+            await _itemRepository.UpdateElementAsync(existingItem).ConfigureAwait(false);
 
-            var images = item.FirstOrDefault(i => i.Id == itemId).ImagesItems.FirstOrDefault().Images;
-            if (images == null)
-                throw new ArgumentException("l'action a échoué: errro sur les images");
+            var updatedItem = await GetItemDetails(itemId).ConfigureAwait(false);
 
-
-            var itemDtoUpdate = ItemMapper.TransformDtoUpdate(request, uniteGet, images);
-            var itemUpdate = await _itemRepository.UpdateElementAsync(itemDtoUpdate).ConfigureAwait(false);
-
-            if (itemUpdate == null)
-                throw new ArgumentException("l'action a échoué : l'articles n'a pas été modifie");
-
-
-            return ItemMapper.TransformDtoExitWithDetails(itemUpdate);
+            return updatedItem;
         }
 
-        /// Delete item <summary>
+        /// Delete item with image <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<ItemDetailsDto> DeleteItem(int itemId)
+        public async Task<string> DeleteItem(int itemId)
         {
-            AddingItemDetails();
+            var existingItem = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
 
-            var item = _itemRepository.GetItemsWithDetails().FirstOrDefault(item => item.Id == itemId);
-            if (item == null)
-                throw new ArgumentException("l'action a échoué : l'article ne existe pas");
-
-            Entity.Model.Item itemDelete = await _itemRepository.DeleteElementAsync(item);
-
-            var imagesItems = item.ImagesItems.ToList(); // Convertir en liste pour éviter une exception de modification en cours d'itération
-            foreach (var imageItem in imagesItems)
+            if (existingItem == null)
             {
-                var image = imageItem.Images;
-                _table.Images.Remove(image);
-                _table.ImagesItems.Remove(imageItem);
+                throw new ArgumentException("Article non trouvé.");
             }
-            await _table.SaveChangesAsync();
+
+            await _imageRepository.DeleteAllImagesForItem(itemId).ConfigureAwait(false);
+
+            await _itemRepository.DeleteElementAsync(existingItem).ConfigureAwait(false);
+
+            var item = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
 
 
-            if (itemDelete == null)
-                throw new ArgumentException("l'action a échoué : l'article n'a pas été supprime ");
+            if (item == null)
+            {
+                return "artciles supprime avec succès et les images associées";
+            }else
+            {
+                throw new ArgumentException("L'action a échoué");
+            }
 
-            //var commentListComments = await _itemRepository.GetCommentOfAnItem(itemId);
-            /* foreach (var comment in commentListComments)
-             {
-                 await _itemRepository.DeleteElementAsync(comment);
-             }*/
-
-            return ItemMapper.TransformDtoExitWithDetails(itemDelete);
         }
 
+
+
+        /// <summary>
+        /// get item with details
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private async Task<ReadItem> GetItemDetails(int itemId)
+        {
+            var item = await _itemRepository.GetItemByIdWithDetails(itemId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException("l'articles n'a pas ete trouve non trouvé.");
+            }
+
+            var images = await _itemRepository.GetAllImagesForItem(itemId).ConfigureAwait(false);
+
+            if (images.Any())
+            {
+                item.Images.AddRange(images);
+            }
+
+            var readItem = _mapper.Map<ReadItem>(item);
+
+            return readItem;
+        }
     }
 }

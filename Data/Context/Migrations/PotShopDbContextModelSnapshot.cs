@@ -71,7 +71,7 @@ namespace Context.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<float>("Subtotal")
+                    b.Property<float?>("Subtotal")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("UpdateDate")
@@ -154,43 +154,19 @@ namespace Context.Migrations
 
             modelBuilder.Entity("Entity.Model.Image", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("FrontImage")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FullImage")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SideImage")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Entity.Model.ImageItem", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("longblob");
 
                     b.Property<int?>("ItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageId");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("ImagesItems");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Entity.Model.Item", b =>
@@ -199,19 +175,19 @@ namespace Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ColorId")
+                    b.Property<int>("ColorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("MaterialId")
+                    b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -220,10 +196,10 @@ namespace Context.Migrations
                     b.Property<float?>("Price")
                         .HasColumnType("float");
 
-                    b.Property<bool?>("Stock")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int?>("Stock")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -277,7 +253,7 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<float>("TotalAmount")
+                    b.Property<float?>("TotalAmount")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("UpdateDate")
@@ -306,7 +282,7 @@ namespace Context.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<float>("Subtotal")
+                    b.Property<float?>("Subtotal")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -422,34 +398,25 @@ namespace Context.Migrations
                         .HasForeignKey("UserId1");
                 });
 
-            modelBuilder.Entity("Entity.Model.ImageItem", b =>
-                {
-                    b.HasOne("Entity.Model.Image", "Images")
-                        .WithMany("ImagesItems")
-                        .HasForeignKey("ImageId");
-
-                    b.HasOne("Entity.Model.Item", "Items")
-                        .WithMany("ImagesItems")
-                        .HasForeignKey("ItemId");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("Entity.Model.Item", b =>
                 {
                     b.HasOne("Entity.Model.Category", "Categories")
                         .WithMany("Items")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entity.Model.Color", "Colors")
                         .WithMany("Items")
-                        .HasForeignKey("ColorId");
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entity.Model.Material", "Materials")
                         .WithMany("Items")
-                        .HasForeignKey("MaterialId");
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Categories");
 
@@ -500,16 +467,6 @@ namespace Context.Migrations
             modelBuilder.Entity("Entity.Model.Color", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("Entity.Model.Image", b =>
-                {
-                    b.Navigation("ImagesItems");
-                });
-
-            modelBuilder.Entity("Entity.Model.Item", b =>
-                {
-                    b.Navigation("ImagesItems");
                 });
 
             modelBuilder.Entity("Entity.Model.Material", b =>

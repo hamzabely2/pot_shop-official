@@ -4,10 +4,10 @@ namespace Service.Interface.Item
 {
     public interface IItemService
     {
-        Task<List<ItemDetailsDto>> GetListItem();
-        Task<ItemDetailsDto> GetItemById(int itemId);
-        Task<ItemDetailsDto> UpdateItem(ItemUpdate request, int itemId);
-        Task<ItemDetailsDto> DeleteItem(int itemId);
-        Task<ItemDetailsDto> CreateItem(ItemAdd request);
+        Task<List<ReadItem>> GetListItem();
+        Task<ReadItem> GetItemById(int itemId);
+        Task<ReadItem> UpdateItem( int itemId, ItemUpdate request);
+        Task<string> DeleteItem(int itemId);
+        Task<ReadItem> CreateItem(ItemAdd request);
     }
 }
