@@ -29,7 +29,7 @@ namespace Service.User
 
         }
 
-        /// get user <summary>
+        /// Get user by Name <summary>
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace Service.User
 
 
 
-        /// get all users <summary>
+        /// Get all users <summary>
         /// </summary>
         /// <returns></returns>
         public async Task<List<Entity.Model.User>> GetAllUsers()
@@ -98,7 +98,7 @@ namespace Service.User
             
             var user = await _userRepository.CreateElementAsync(newUser).ConfigureAwait(false);
             if (user == null)
-                throw new ArgumentException("l'enregistrement n'a pas réussi, quelque chose s'est mal passé");
+                throw new ArgumentException("L'enregistrement n'a pas réussi, quelque chose s'est mal passé");
 
 
             //addin role of a user
@@ -157,13 +157,12 @@ namespace Service.User
 
             var token = _connectionService.CreateToken(claims);
 
-            // Ajouter le token à un cookie en utilisant _httpContextAccessor
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.UtcNow.AddDays(1),
                 HttpOnly = true,
                 Secure = true,
-                Domain = "example.com" // Remplacez par votre domaine réel
+                Domain = "example.com"
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("token", new JwtSecurityTokenHandler().WriteToken(token), cookieOptions);
@@ -183,21 +182,21 @@ namespace Service.User
             int userConnectedId = userInfo.Id;
             var userToUpdate = await _userRepository.GetByKeys(userConnectedId);
             if (userToUpdate == null)
-                throw new ArgumentException("l'action a échoué : l'ulisateur n'a pas été trouvée");
+                throw new ArgumentException("L'action a échoué : l'ulisateur n'a pas été trouvée");
 
             var userExistsUserName = await _userRepository.GetUserByName(request.FirstName);
             if (userExistsUserName != null)
-                throw new ArgumentException("l'action a échoué :le nom existe déjà");
+                throw new ArgumentException("L'action a échoué :le nom existe déjà");
 
             var userExistsEmail = await _userRepository.GetUserByEmail(request.Email);
             if (userExistsEmail != null)
-                throw new ArgumentException("l'action a échoué :l'email existe déjà");
+                throw new ArgumentException("L'action a échoué :l'email existe déjà");
 
             var user = UserMapper.TransformDtoUpdate(request, userToUpdate);
 
             var userUpdate = await _userRepository.UpdateElementAsync(user).ConfigureAwait(false);
             if (userUpdate == null)
-                throw new ArgumentException("l'action a échoué : la modification des données utilisateur a échoué");
+                throw new ArgumentException("L'action a échoué : la modification des données utilisateur a échoué");
             var resultUserUpdate = UserMapper.TransformDtoExit(userUpdate);
 
             return resultUserUpdate;
@@ -221,15 +220,15 @@ namespace Service.User
             }
 
             if (request.ConfirmNewPassword != request.NewPassword)
-                throw new ArgumentException("l'action a échoué: le nouveau mot de passe ne correspond pas au mot de passe de confirmation");
+                throw new ArgumentException("L'action a échoué: le nouveau mot de passe ne correspond pas au mot de passe de confirmation");
 
 
             // Mettre à jour le mot de passe dans la base de données
             if (!_connectionService.IsPasswordValid(request.NewPassword))
-                throw new ArgumentException("l'action a échoué: les mots de passe doivent comporter au moins un chiffre ('0' - '9'). Les mots de passe doivent contenir au moins une majuscule ('A' - 'Z').\\\"\"");
+                throw new ArgumentException("L'action a échoué: les mots de passe doivent comporter au moins un chiffre ('0' - '9'). Les mots de passe doivent contenir au moins une majuscule ('A' - 'Z').\\\"\"");
 
             if (request.OldPassword == request.NewPassword)
-                throw new ArgumentException("l'action a échoué: le nouveau mot de passe est le même que l'ancien");
+                throw new ArgumentException("L'action a échoué: le nouveau mot de passe est le même que l'ancien");
 
             user.PasswordHash = request.NewPassword;
             await _userRepository.UpdateElementAsync(user);
@@ -249,7 +248,7 @@ namespace Service.User
             var user = await _userRepository.GetByKeys(userId);
 
             if (user == null)
-                throw new ArgumentException("l'action a échoué : l'ulisateur n'a pas été trouvée");
+                throw new ArgumentException("L'action a échoué : l'ulisateur n'a pas été trouvée");
 
             await _roleService.DeleteRoleAsync(userId);
             Entity.Model.User userDelete = await _userRepository.DeleteElementAsync(user);

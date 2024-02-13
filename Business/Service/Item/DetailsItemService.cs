@@ -55,7 +55,7 @@ namespace Service.Item
         {
             var colors = await _colorRepository.GetAllAsync().ConfigureAwait(false);
             if (colors == null)
-                throw new ArgumentException("l'action a échoué");
+                throw new ArgumentException("L'action a échoué");
 
             List<ColorDto> colorList = new();
             foreach (Color color in colors)
@@ -75,7 +75,7 @@ namespace Service.Item
             var color = DatailsItemMapper.TransformCreateColor(request);
             var LabelExiste = await _colorRepository.GetColorByName(request.Label);
             if (LabelExiste != null)
-                throw new ArgumentException("l'action a échoué: la couleur existe déjà");
+                throw new ArgumentException("L'action a échoué: la couleur existe déjà");
 
             var colorCreated = await _colorRepository.CreateElementAsync(color).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteColor(colorCreated);
@@ -92,7 +92,7 @@ namespace Service.Item
         {
             var color = await _colorRepository.GetByKeys(colorId).ConfigureAwait(false);
             if (color == null)
-                throw new ArgumentException("l'action a échoué: la couleur n'existe pas");
+                throw new ArgumentException("L'action a échoué: la couleur n'existe pas");
 
             var colorDelete = await _colorRepository.DeleteElementAsync(color).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteColor(colorDelete);
@@ -131,7 +131,7 @@ namespace Service.Item
         {
             var categories = await _categoryRepository.GetAllAsync().ConfigureAwait(false);
             if (categories == null)
-                throw new ArgumentException("l'action a échoué");
+                throw new ArgumentException("L'action a échoué");
 
             List<CategoryDto> categoryList = new();
             foreach (Category categorie in categories)
@@ -151,7 +151,7 @@ namespace Service.Item
             var category = DatailsItemMapper.TransformCreateCategory(request);
             var LabelExiste = await _categoryRepository.GetCategoryByName(request.Label);
             if (LabelExiste != null)
-                throw new ArgumentException("l'action a échoué: la catégorie existe déjà");
+                throw new ArgumentException("L'action a échoué: la catégorie existe déjà");
 
             var categoryCreated = await _categoryRepository.CreateElementAsync(category).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteCategory(categoryCreated);
@@ -168,7 +168,7 @@ namespace Service.Item
         {
             var category = await _categoryRepository.GetByKeys(categoryId).ConfigureAwait(false);
             if (category == null)
-                throw new ArgumentException("l'action a échoué: la catégorie n'existe pas");
+                throw new ArgumentException("L'action a échoué: la catégorie n'existe pas");
 
             var categoryDelete = await _categoryRepository.DeleteElementAsync(category).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteCategory(categoryDelete);
@@ -207,7 +207,7 @@ namespace Service.Item
         {
             var materials = await _materialRepository.GetAllAsync().ConfigureAwait(false);
             if (materials == null)
-                throw new ArgumentException("l'action a échoué");
+                throw new ArgumentException("L'action a échoué");
 
             List<MaterialDto> materialList = new();
             foreach (Material material in materials)
@@ -227,7 +227,7 @@ namespace Service.Item
             var material = DatailsItemMapper.TransformCreateMaterial(request);
             var LabelExiste = await _materialRepository.GetMaterialByName(request.Label);
             if (LabelExiste != null)
-                throw new ArgumentException("l'action a échoué: la matériel existe déjà");
+                throw new ArgumentException("L'action a échoué: la matériel existe déjà");
 
             var materialCreated = await _materialRepository.CreateElementAsync(material).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteMaterial(materialCreated);
@@ -244,7 +244,7 @@ namespace Service.Item
         {
             var material = await _materialRepository.GetByKeys(materilId).ConfigureAwait(false);
             if (material == null)
-                throw new ArgumentException("l'action a échoué: la matériel n'existe pas");
+                throw new ArgumentException("L'action a échoué: la matériel n'existe pas");
 
             var materialDelete = await _materialRepository.DeleteElementAsync(material).ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteMaterial(materialDelete);

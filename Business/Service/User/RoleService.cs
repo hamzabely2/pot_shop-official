@@ -63,7 +63,7 @@ namespace Service.User
 
                 return addedRoleUser;
             }
-            throw new ArgumentException("l'enregistrement n'a pas réussi, quelque chose s'est mal passé");
+            throw new ArgumentException("L'enregistrement n'a pas réussi, quelque chose s'est mal passé");
         }
 
 

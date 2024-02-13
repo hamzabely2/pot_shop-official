@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using Context.Interface;
-using Entity.Model;
-using Mapper.Item;
-using Model.DetailsItem;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
@@ -14,7 +11,6 @@ namespace Service.Item
         private readonly ItemIRepository _itemRepository;
         private readonly ImageIRepository _imageRepository;
         private readonly IDetailsItemService _detailsItemIService;
-        private readonly PotShopIDbContext _table;
         private readonly IMapper _mapper;
 
         public ItemService(
@@ -27,7 +23,6 @@ namespace Service.Item
         {
             _itemRepository = itemRepository;
             _detailsItemIService = detailsItemIService;
-            _table = _idbcontext;
             _mapper = mapper;
             _imageRepository = imageRepository;
         }
@@ -39,7 +34,7 @@ namespace Service.Item
             _detailsItemIService.AddMaterials();
         }
 
-        /// get item by id <summary>
+        /// Get item by id <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -65,7 +60,7 @@ namespace Service.Item
             return readItem;
         }
 
-        /// list items> <summary>
+        /// Get list items> <summary>
         /// </summary>
         /// <returns></returns>
         public async Task<List<ReadItem>> GetListItem()
@@ -90,7 +85,7 @@ namespace Service.Item
             return itemDetailsDtos;
         }
 
-        /// add item <summary>
+        /// Create item <summary>
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -184,7 +179,7 @@ namespace Service.Item
         /// <param name="itemId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        private async Task<ReadItem> GetItemDetails(int itemId)
+        public async Task<ReadItem> GetItemDetails(int itemId)
         {
             var item = await _itemRepository.GetItemByIdWithDetails(itemId).ConfigureAwait(false);
 

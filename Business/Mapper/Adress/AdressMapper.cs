@@ -51,9 +51,12 @@ namespace Mapper.Adress
             CreateMap<Material, MaterialDto>();
 
             CreateMap<Image, ImageDto>();
-            CreateMap<ItemUpdate, Entity.Model.Item>();
+            CreateMap<ItemUpdate, Entity.Model.Item>();          
+            CreateMap<Cart, CartItem>(); 
 
-
+            }
         }
+
     }
-}
+
+

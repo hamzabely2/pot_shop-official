@@ -9,5 +9,6 @@ namespace Service.Interface.Item
         Task<ReadItem> UpdateItem( int itemId, ItemUpdate request);
         Task<string> DeleteItem(int itemId);
         Task<ReadItem> CreateItem(ItemAdd request);
+        Task<ReadItem> GetItemDetails(int itemId);
     }
 }

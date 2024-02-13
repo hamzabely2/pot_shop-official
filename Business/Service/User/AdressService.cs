@@ -100,11 +100,11 @@ namespace Service.User
         {
             var address = await _adressRepository.GetByKeys(IdAdress);
             if (address == null)
-                throw new ArgumentException("l'action a échoué : l'adresse n'a pas été trouvée");
+                throw new ArgumentException("L'action a échoué : l'adresse n'a pas été trouvée");
 
             var deleteAdress = await _adressRepository.DeleteElementAsync(address);
             if (deleteAdress == null)
-                throw new ArgumentException("l'action a échoué : l'adresse n'a pas été supprime");
+                throw new ArgumentException("L'action a échoué : l'adresse n'a pas été supprime");
 
             return deleteAdress;
         }

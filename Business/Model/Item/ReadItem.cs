@@ -9,9 +9,11 @@ namespace Model.Item
 {
     public class ReadItem
     {
+
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public float? Price { get; set; }
-        public bool? Stock { get; set; }
+        public int? Stock { get; set; }
         public string Description { get; set; } = null!;
         public CategoryDto Categories { get; set; }
         public ColorDto Colors { get; set; }

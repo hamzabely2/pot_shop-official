@@ -3,11 +3,14 @@ using Context.Interface;
 using Entity.Model;
 using Microsoft.AspNetCore.Http;
 using Model.Cart;
+using Model.Item;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Interface.Item;
 using Repository.Interface.Order;
+using Service.Interface.Item;
 using Service.Interface.Order;
 using Service.Interface.User;
+using Service.Item;
 
 namespace Service.Order
 {
@@ -16,6 +19,7 @@ namespace Service.Order
         private readonly ICartRepository _cartRepository;
         private readonly PotShopIDbContext _table;
         private readonly ItemIRepository _itemRepository;
+        private readonly IItemService _itemService;
         private readonly IConnectionService _connectionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
@@ -26,6 +30,7 @@ namespace Service.Order
             ICartRepository cartRepository,
             ItemIRepository itemRepository,
             IConnectionService connectionService,
+            IItemService itemService,
             IHttpContextAccessor httpContextAccessor
         )
         {
@@ -35,6 +40,7 @@ namespace Service.Order
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _itemService = itemService;
         }
 
         /// <summary>
@@ -65,7 +71,10 @@ namespace Service.Order
                 existingCartItem.Subtotal = item.Price * request.Quantity;
                 existingCartItem.UpdateDate = DateTime.UtcNow;
                 await _cartRepository.UpdateElementAsync(existingCartItem).ConfigureAwait(false);
-                return _mapper.Map<CartItem>(existingCartItem);
+
+                var cartItem = _mapper.Map<CartItem>(existingCartItem);
+                cartItem.Items = await _itemService.GetItemDetails(request.ItemId).ConfigureAwait(false);
+                return cartItem;
             }
 
             var cartEntity = _mapper.Map<Cart>(request);
@@ -73,12 +82,15 @@ namespace Service.Order
             cartEntity.Items = item;
             cartEntity.Subtotal = item.Price * request.Quantity;
 
-            Cart cartAddress = await _cartRepository
+            var createdCart = await _cartRepository
                 .CreateElementAsync(cartEntity)
                 .ConfigureAwait(false);
 
-            return _mapper.Map<CartItem>(cartAddress);
+            var createdCartItem = _mapper.Map<CartItem>(createdCart);
+            createdCartItem.Items = await _itemService.GetItemDetails(request.ItemId).ConfigureAwait(false);
+            return createdCartItem;
         }
+
 
         /// <summary>
         /// get cart by user
@@ -93,8 +105,18 @@ namespace Service.Order
                 .GetCartItemsByUserId(userId)
                 .ConfigureAwait(false);
 
-            return cartItems.Select(cart => _mapper.Map<CartItem>(cart));
+            var cartItemsDto = new List<CartItem>();
+
+            foreach (var cart in cartItems)
+            {
+                var cartItemDto = _mapper.Map<CartItem>(cart);
+                cartItemDto.Items = await _itemService.GetItemDetails(cart.ItemId).ConfigureAwait(false);
+                cartItemsDto.Add(cartItemDto);
+            }
+
+            return cartItemsDto;
         }
+
 
         /// <summary>
         /// delete item from the cart
