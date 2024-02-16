@@ -94,7 +94,7 @@ namespace Test.Integration
         public async Task CreateColor_ReturnColor()
         {
 
-            var newItem = new ColorDto { Label = "yellow" };
+            var newItem = new ColorDto { Hex = "yellow" };
             var newItemJson = new StringContent(JsonSerializer.Serialize(newItem), Encoding.UTF8, "application/json");
 
             var adminUser = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>

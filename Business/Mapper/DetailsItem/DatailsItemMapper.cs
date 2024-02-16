@@ -7,25 +7,6 @@ namespace Mapper.DetailsItem
 {
     public static class DatailsItemMapper
     {
-        /// <summary>
-        /// DTO for color
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static ColorDto TransformExiteColor(Color color)
-        {
-            return new ColorDto
-            {
-                Label = color.Label,
-            };
-        }
-        public static Color TransformCreateColor(ColorDto request)
-        {
-            return new Color
-            {
-                Label = request.Label,
-            };
-        }
 
         /// <summary>
         /// DTO fot category

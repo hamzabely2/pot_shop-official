@@ -19,11 +19,27 @@ namespace Repository.Item
         /// <param name="label"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<Color> GetColorByName(string label)
+        public async Task<Color> GetColorByName(string hex)
         {
-            Color color = await _table.FirstOrDefaultAsync(x => x.Label == label).ConfigureAwait(false);
+            Color color = await _table.FirstOrDefaultAsync(x => x.Hex == hex).ConfigureAwait(false);
 
             return color;
+        }
+
+
+        public async Task DeleteAllColorsForItem(int itemId)
+        {
+            var colorsToDelete = await _table
+                .Where(img => img.ItemId == itemId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            foreach (var color in colorsToDelete)
+            {
+                _table.Remove(color);
+            }
+
+            await _idbcontext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

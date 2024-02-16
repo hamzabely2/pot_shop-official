@@ -56,7 +56,6 @@ namespace Api.Test.Unit
                 Name = "vase",
                 Price = 20,
                 CategoryId = 1,
-                ColorId = 1,
                 MaterialId = 1,
                 Stock = 55,
                 Description = "description",

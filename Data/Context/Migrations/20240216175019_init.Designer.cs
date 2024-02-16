@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(PotShopDbContext))]
-    [Migration("20240212211726_init")]
+    [Migration("20240216175019_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,6 +97,10 @@ namespace Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -104,6 +108,26 @@ namespace Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Tagine description",
+                            Label = "Tagine"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Pot de conservation description",
+                            Label = "Pot de conservation"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Pot de jardin description",
+                            Label = "Pot de jardin"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Model.Color", b =>
@@ -112,11 +136,16 @@ namespace Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Label")
+                    b.Property<string>("Hex")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Colors");
                 });
@@ -180,9 +209,6 @@ namespace Context.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ColorId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
@@ -208,8 +234,6 @@ namespace Context.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ColorId");
-
                     b.HasIndex("MaterialId");
 
                     b.ToTable("Items");
@@ -221,6 +245,10 @@ namespace Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -228,6 +256,38 @@ namespace Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Materials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Argile rouge description",
+                            Label = "Argile rouge"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Argile blanche description",
+                            Label = "Argile blanche"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Argile chamottée description",
+                            Label = "Argile chamottée"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Argile noire description",
+                            Label = "Argile noire"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Argile grès description",
+                            Label = "Argile grès"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Model.Order", b =>
@@ -393,6 +453,13 @@ namespace Context.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Entity.Model.Color", b =>
+                {
+                    b.HasOne("Entity.Model.Item", null)
+                        .WithMany("Colors")
+                        .HasForeignKey("ItemId");
+                });
+
             modelBuilder.Entity("Entity.Model.Comment", b =>
                 {
                     b.HasOne("Entity.Model.User", null)
@@ -408,12 +475,6 @@ namespace Context.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entity.Model.Color", "Colors")
-                        .WithMany("Items")
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Entity.Model.Material", "Materials")
                         .WithMany("Items")
                         .HasForeignKey("MaterialId")
@@ -421,8 +482,6 @@ namespace Context.Migrations
                         .IsRequired();
 
                     b.Navigation("Categories");
-
-                    b.Navigation("Colors");
 
                     b.Navigation("Materials");
                 });
@@ -466,9 +525,9 @@ namespace Context.Migrations
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("Entity.Model.Color", b =>
+            modelBuilder.Entity("Entity.Model.Item", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Colors");
                 });
 
             modelBuilder.Entity("Entity.Model.Material", b =>

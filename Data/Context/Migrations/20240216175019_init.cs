@@ -20,26 +20,13 @@ namespace Context.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Label = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Colors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Label = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Colors", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -65,6 +52,8 @@ namespace Context.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Label = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -153,7 +142,6 @@ namespace Context.Migrations
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
                     MaterialId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -163,12 +151,6 @@ namespace Context.Migrations
                         name: "FK_Items_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Items_Colors_ColorId",
-                        column: x => x.ColorId,
-                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -294,6 +276,27 @@ namespace Context.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Colors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ItemId = table.Column<int>(type: "int", nullable: true),
+                    Hex = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Colors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Colors_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -321,6 +324,28 @@ namespace Context.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Description", "Label" },
+                values: new object[,]
+                {
+                    { 1, "Tagine description", "Tagine" },
+                    { 2, "Pot de conservation description", "Pot de conservation" },
+                    { 3, "Pot de jardin description", "Pot de jardin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Materials",
+                columns: new[] { "Id", "Description", "Label" },
+                values: new object[,]
+                {
+                    { 1, "Argile rouge description", "Argile rouge" },
+                    { 2, "Argile blanche description", "Argile blanche" },
+                    { 4, "Argile chamottée description", "Argile chamottée" },
+                    { 5, "Argile noire description", "Argile noire" },
+                    { 6, "Argile grès description", "Argile grès" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Adresses_UserId",
                 table: "Adresses",
@@ -337,6 +362,11 @@ namespace Context.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Colors_ItemId",
+                table: "Colors",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId1",
                 table: "Comments",
                 column: "UserId1");
@@ -345,11 +375,6 @@ namespace Context.Migrations
                 name: "IX_Items_CategoryId",
                 table: "Items",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Items_ColorId",
-                table: "Items",
-                column: "ColorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_MaterialId",
@@ -386,6 +411,9 @@ namespace Context.Migrations
                 name: "Carts");
 
             migrationBuilder.DropTable(
+                name: "Colors");
+
+            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
@@ -411,9 +439,6 @@ namespace Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Colors");
 
             migrationBuilder.DropTable(
                 name: "Materials");

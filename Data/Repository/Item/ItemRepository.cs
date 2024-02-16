@@ -1,4 +1,5 @@
 ﻿using Context.Interface;
+using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface.Item;
 
@@ -6,12 +7,13 @@ namespace Repository.Item
 {
     public class ItemRepository : GenericRepository<Entity.Model.Item>, ItemIRepository
     {
-        public ItemRepository(PotShopIDbContext _idbcontext) : base(_idbcontext)
+        public ItemRepository(PotShopIDbContext _idbcontext)
+            : base(_idbcontext)
         {
             _table = _idbcontext.Set<Entity.Model.Item>();
         }
-        private readonly DbSet<Entity.Model.Item> _table;
 
+        private readonly DbSet<Entity.Model.Item> _table;
 
         /// get by name   <summary>
         /// </summary>
@@ -20,7 +22,9 @@ namespace Repository.Item
         /// <exception cref="ArgumentException"></exception>
         public async Task<Entity.Model.Item> GetItemByName(string name)
         {
-            Entity.Model.Item item = await _table.FirstOrDefaultAsync(x => x.Name == name).ConfigureAwait(false);
+            Entity.Model.Item item = await _table
+                .FirstOrDefaultAsync(x => x.Name == name)
+                .ConfigureAwait(false);
 
             return item;
         }
@@ -32,12 +36,10 @@ namespace Repository.Item
             return await _table.FirstOrDefaultAsync(item => item.Id == itemId);
         }
 
-
         public async Task<Entity.Model.Item> GetItemByIdWithDetails(int itemId)
         {
             var item = await _table
                 .Where(i => i.Id == itemId)
-                .Include(i => i.Colors)
                 .Include(i => i.Materials)
                 .Include(i => i.Categories)
                 .FirstOrDefaultAsync()
@@ -48,15 +50,22 @@ namespace Repository.Item
 
         public async Task<List<byte[]>> GetAllImagesForItem(int itemId)
         {
-            var imagesData = await _idbcontext.Images
-                                            .Where(img => img.ItemId == itemId)
-                                            .Select(img => img.ImageData)
-                                            .ToListAsync()
-                                            .ConfigureAwait(false);
+            var imagesData = await _idbcontext
+                .Images.Where(img => img.ItemId == itemId)
+                .Select(img => img.ImageData)
+                .ToListAsync()
+                .ConfigureAwait(false);
 
             return imagesData;
         }
 
-
+        public async Task<List<Color>> GetAllColorsForItem(int itemId)
+        {
+            var colorsData = await _idbcontext
+                .Colors.Where(col => col.ItemId == itemId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+            return colorsData;
+        }
     }
 }

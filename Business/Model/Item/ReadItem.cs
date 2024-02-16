@@ -16,7 +16,7 @@ namespace Model.Item
         public int? Stock { get; set; }
         public string Description { get; set; } = null!;
         public CategoryDto Categories { get; set; }
-        public ColorDto Colors { get; set; }
+        public List<ColorDto> Colors { get; set; }= new List<ColorDto>();
         public MaterialDto Materials { get; set; }
         public List<byte[]> Images { get; set; } = new List<byte[]>();
     }

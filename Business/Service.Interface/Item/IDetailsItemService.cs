@@ -12,7 +12,6 @@ namespace Service.Interface.Item
         /// <summary>
         /// crud for  color
         /// </summary>
-        void AddColors();
         Task<List<ColorDto>> GetAllColor();
         Task<ColorDto> CreateColor(ColorDto request);
         Task<ColorDto> DeleteColor(int colorId);
@@ -20,7 +19,6 @@ namespace Service.Interface.Item
         /// <summary>
         /// crud for category
         /// </summary>
-        void AddCategories();
         Task<List<CategoryDto>> GetAllCategory();
         Task<CategoryDto> CreateCategory(CategoryDto request);
         Task<CategoryDto> DeleteCategory(int categoryId);
@@ -28,7 +26,6 @@ namespace Service.Interface.Item
         /// <summary>
         /// crud for material
         /// </summary>
-        void AddMaterials();
         Task<List<MaterialDto>> GetAllMaterial();
         Task<MaterialDto> CreateMaterial(MaterialDto request);
         Task<MaterialDto> DeleteMaterial(int materilId);

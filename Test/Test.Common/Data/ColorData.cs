@@ -11,12 +11,12 @@ namespace Test.Common
             var color1 = new Color
             {
                 Id = 1,
-                Label = "red"
+                Hex = "red"
             };
             var color2 = new Color
             {
                 Id = 2,
-                Label = "green"
+                Hex = "green"
             };
             idbContext.Colors.AddRange(color1, color2);
             idbContext.SaveChanges();
@@ -26,7 +26,7 @@ namespace Test.Common
             var color1 = new Color
             {
                 Id = 3,
-                Label = "red"
+                Hex = "red"
             };
 
             idbContext.Colors.AddRange(color1);

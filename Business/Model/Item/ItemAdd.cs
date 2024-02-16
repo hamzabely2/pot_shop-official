@@ -20,14 +20,12 @@ namespace Model.Item
         public int? CategoryId { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer un color")]
-        public int? ColorId { get; set; }
+        public string? Color { get; set; }
 
         [Required(ErrorMessage = "Veuillez entrer le type de material")]
         public int? MaterialId { get; set; }
 
         [Required(ErrorMessage = "Veuillez insere un image")]
         public byte[]? ImagesData { get; set; }
-
-
     }
 }

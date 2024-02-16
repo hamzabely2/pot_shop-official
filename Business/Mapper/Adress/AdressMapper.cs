@@ -44,15 +44,17 @@ namespace Mapper.Adress
 
             // item mapper
             CreateMap<Entity.Model.Item, ReadItem>();
-            CreateMap<ItemAdd, Entity.Model.Item>();
-
             CreateMap<Category, CategoryDto>();
             CreateMap<Color, ColorDto>();
             CreateMap<Material, MaterialDto>();
 
-            CreateMap<Image, ImageDto>();
+
+            CreateMap<ItemAdd, Entity.Model.Item>();
             CreateMap<ItemUpdate, Entity.Model.Item>();          
-            CreateMap<Cart, CartItem>(); 
+            CreateMap<Cart, CartItem>();
+            CreateMap<ColorDto, Color>();
+
+
 
             }
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Context.Interface;
+using Entity.Model;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
@@ -10,6 +11,7 @@ namespace Service.Item
     {
         private readonly ItemIRepository _itemRepository;
         private readonly ImageIRepository _imageRepository;
+        private readonly ColorIRepository _colorRepository;
         private readonly IDetailsItemService _detailsItemIService;
         private readonly IMapper _mapper;
 
@@ -17,6 +19,7 @@ namespace Service.Item
             ImageIRepository imageRepository,
             PotShopIDbContext _idbcontext,
             ItemIRepository itemRepository,
+            ColorIRepository colorRepository,
             IDetailsItemService detailsItemIService,
             IMapper mapper
         )
@@ -25,13 +28,7 @@ namespace Service.Item
             _detailsItemIService = detailsItemIService;
             _mapper = mapper;
             _imageRepository = imageRepository;
-        }
-
-        private async void AddingItemDetails()
-        {
-            _detailsItemIService.AddColors();
-            _detailsItemIService.AddCategories();
-            _detailsItemIService.AddMaterials();
+            _colorRepository = colorRepository;
         }
 
         /// Get item by id <summary>
@@ -41,8 +38,6 @@ namespace Service.Item
         /// <exception cref="ArgumentException"></exception>
         public async Task<ReadItem> GetItemById(int itemId)
         {
-            AddingItemDetails();
-
             var item = await _itemRepository.GetItemByIdWithDetails(itemId).ConfigureAwait(false);
 
             if (item == null)
@@ -65,8 +60,6 @@ namespace Service.Item
         /// <returns></returns>
         public async Task<List<ReadItem>> GetListItem()
         {
-            AddingItemDetails();
-
             var items = await _itemRepository.GetAllAsync().ConfigureAwait(false);
 
             if (items == null)
@@ -79,6 +72,7 @@ namespace Service.Item
             foreach (var item in items)
             {
                 var readItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+
                 itemDetailsDtos.Add(readItem);
             }
 
@@ -92,28 +86,36 @@ namespace Service.Item
 
         public async Task<ReadItem> CreateItem(ItemAdd request)
         {
-            var existingItem = await _itemRepository.GetItemByName(request.Name).ConfigureAwait(false);
+            var existingItem = await _itemRepository
+                .GetItemByName(request.Name)
+                .ConfigureAwait(false);
             if (existingItem != null)
             {
                 throw new ArgumentException("L'action a échoué : Le nom de l'article existe déjà.");
             }
 
-            if (request.CategoryId == 0 || request.MaterialId == 0 || request.ColorId == 0)
+            if (request.CategoryId == 0 || request.MaterialId == 0)
             {
-                throw new ArgumentException("L'action a échoué : Les détails de l'article n'ont pas été précisés.");
+                throw new ArgumentException(
+                    "L'action a échoué : Les détails de l'article n'ont pas été précisés."
+                );
             }
 
             var newItem = _mapper.Map<Entity.Model.Item>(request);
             newItem.CreatedDate = DateTime.Now;
             newItem.UpdateDate = DateTime.Now;
-
             await _itemRepository.CreateElementAsync(newItem).ConfigureAwait(false);
 
+            var image = new Image { ItemId = newItem.Id, ImageData = request.ImagesData };
+
+            var color = new Color { ItemId = newItem.Id, Hex = request.Color };
+
+            await _imageRepository.CreateElementAsync(image).ConfigureAwait(false);
+            await _colorRepository.CreateElementAsync(color).ConfigureAwait(false);
             var createdItem = await GetItemDetails(newItem.Id).ConfigureAwait(false);
 
             return createdItem;
         }
-
 
         /// Update item <summary>
         /// </summary>
@@ -127,7 +129,7 @@ namespace Service.Item
 
             if (existingItem == null)
             {
-                throw new ArgumentException("Article non trouvé.");
+                throw new ArgumentException("L'article n'a pas été trouvé");
             }
 
             _mapper.Map(request, existingItem);
@@ -151,27 +153,24 @@ namespace Service.Item
 
             if (existingItem == null)
             {
-                throw new ArgumentException("Article non trouvé.");
+                throw new ArgumentException("L'article n'a pas été trouvé");
             }
 
             await _imageRepository.DeleteAllImagesForItem(itemId).ConfigureAwait(false);
-
+            await _colorRepository.DeleteAllColorsForItem(itemId).ConfigureAwait(false);
             await _itemRepository.DeleteElementAsync(existingItem).ConfigureAwait(false);
 
             var item = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
 
-
             if (item == null)
             {
-                return "artciles supprime avec succès et les images associées";
-            }else
+                return "artciles supprime avec succès et les images associées et ses coleaur";
+            }
+            else
             {
                 throw new ArgumentException("L'action a échoué");
             }
-
         }
-
-
 
         /// <summary>
         /// get item with details
@@ -185,19 +184,17 @@ namespace Service.Item
 
             if (item == null)
             {
-                throw new ArgumentException("l'articles n'a pas ete trouve non trouvé.");
+                throw new ArgumentException("L'article n'a pas été trouvé.");
             }
 
             var images = await _itemRepository.GetAllImagesForItem(itemId).ConfigureAwait(false);
+            item.Images.AddRange(images);
 
-            if (images.Any())
-            {
-                item.Images.AddRange(images);
-            }
+            var colors = await _itemRepository.GetAllColorsForItem(itemId).ConfigureAwait(false);
+            item.Colors.Clear();
+            item.Colors.AddRange(colors);
 
-            var readItem = _mapper.Map<ReadItem>(item);
-
-            return readItem;
+            return _mapper.Map<ReadItem>(item);
         }
     }
 }

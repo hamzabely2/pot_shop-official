@@ -14,7 +14,6 @@ namespace Test.Common
                 Price = 30,
                 Description = "description vase",
                 CategoryId = 1,
-                ColorId = 1,
                 MaterialId = 1,
                 Stock = 55
             };
@@ -25,7 +24,6 @@ namespace Test.Common
                 Price = 20,
                 Description = "description tagin",
                 CategoryId = 1,
-                ColorId = 1,
                 MaterialId = 1,
                 Stock = 55
             };

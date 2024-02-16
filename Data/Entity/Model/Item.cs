@@ -14,9 +14,8 @@ namespace Entity.Model
             public DateTime? CreatedDate { get; set; } // Déclarée comme nullable
             public DateTime? UpdateDate { get; set; }  // Déclarée comme nullable
             public int CategoryId { get; set; } // Déclarée comme non-nullable
-            public int ColorId { get; set; }    // Déclarée comme non-nullable
             public int MaterialId { get; set; } // Déclarée comme non-nullable
-            public virtual Color Colors { get; set; } = null!;
+            public virtual List<Color> Colors { get; set; } = new List<Color>();
             public virtual Material Materials { get; set; } = null!;
             public virtual Category Categories { get; set; } = null!;
             [NotMapped]

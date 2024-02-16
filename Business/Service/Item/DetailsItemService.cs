@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using Context.Interface;
 using Entity.Model;
 using Mapper.DetailsItem;
@@ -16,34 +14,21 @@ namespace Service.Item
         private readonly ColorIRepository _colorRepository;
         private readonly CategoryIRepository _categoryRepository;
         private readonly MaterialIRepository _materialRepository;
+        private readonly IMapper _mapper;
 
-        public DetailsItemService(PotShopIDbContext context, ColorIRepository colorRepository, CategoryIRepository categoryRepository, MaterialIRepository materialRepository)
+        public DetailsItemService(
+            IMapper mapper,
+            PotShopIDbContext context,
+            ColorIRepository colorRepository,
+            CategoryIRepository categoryRepository,
+            MaterialIRepository materialRepository
+        )
         {
             _context = context;
             _colorRepository = colorRepository;
             _categoryRepository = categoryRepository;
             _materialRepository = materialRepository;
-        }
-
-        /// <summary>
-        /// adding details 
-        /// </summary>
-        public void AddColors()
-        {
-            var couleurs = new List<string>
-            {
-                "Rouge", "Bleu", "Vert", "Jaune", "Orange",
-                "Violet", "Rose", "Gris", "Marron", "Noir", "Blanc",
-            };
-            foreach (var couleur in couleurs)
-            {
-                if (!_context.Colors.Any(c => c.Label == couleur))
-                {
-                    var nouvelleDonnee = new Color { Label = couleur };
-                    _context.Colors.Add(nouvelleDonnee);
-                }
-            }
-            _context.SaveChanges();
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -60,7 +45,7 @@ namespace Service.Item
             List<ColorDto> colorList = new();
             foreach (Color color in colors)
             {
-                colorList.Add(DatailsItemMapper.TransformExiteColor(color));
+                colorList.Add(_mapper.Map<ColorDto>(color));
             }
             return colorList;
         }
@@ -72,14 +57,15 @@ namespace Service.Item
         /// <returns></returns>
         public async Task<ColorDto> CreateColor(ColorDto request)
         {
-            var color = DatailsItemMapper.TransformCreateColor(request);
-            var LabelExiste = await _colorRepository.GetColorByName(request.Label);
+            var color = _mapper.Map<Color>(request);
+            var LabelExiste = await _colorRepository.GetColorByName(request.Hex);
             if (LabelExiste != null)
                 throw new ArgumentException("L'action a échoué: la couleur existe déjà");
 
-            var colorCreated = await _colorRepository.CreateElementAsync(color).ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteColor(colorCreated);
-
+            var colorCreated = await _colorRepository
+                .CreateElementAsync(color)
+                .ConfigureAwait(false);
+            return _mapper.Map<ColorDto>(colorCreated);
         }
 
         /// <summary>
@@ -94,32 +80,10 @@ namespace Service.Item
             if (color == null)
                 throw new ArgumentException("L'action a échoué: la couleur n'existe pas");
 
-            var colorDelete = await _colorRepository.DeleteElementAsync(color).ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteColor(colorDelete);
-        }
-
-
-
-        /// <summary>
-        /// adding details 
-        /// </summary>
-        public void AddCategories()
-        {
-            var categories = new List<string>
-            {
-                "Tagine", "Pot de conservation", "Pot de jardin"
-
-            };
-
-            foreach (var category in categories)
-            {
-                if (!_context.Categories.Any(c => c.Label == category))
-                {
-                    var nouvelleDonnee = new Category { Label = category };
-                    _context.Categories.Add(nouvelleDonnee);
-                }
-            }
-            _context.SaveChanges();
+            var colorDelete = await _colorRepository
+                .DeleteElementAsync(color)
+                .ConfigureAwait(false);
+            return _mapper.Map<ColorDto>(colorDelete);
         }
 
         /// <summary>
@@ -153,9 +117,10 @@ namespace Service.Item
             if (LabelExiste != null)
                 throw new ArgumentException("L'action a échoué: la catégorie existe déjà");
 
-            var categoryCreated = await _categoryRepository.CreateElementAsync(category).ConfigureAwait(false);
+            var categoryCreated = await _categoryRepository
+                .CreateElementAsync(category)
+                .ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteCategory(categoryCreated);
-
         }
 
         /// <summary>
@@ -170,33 +135,11 @@ namespace Service.Item
             if (category == null)
                 throw new ArgumentException("L'action a échoué: la catégorie n'existe pas");
 
-            var categoryDelete = await _categoryRepository.DeleteElementAsync(category).ConfigureAwait(false);
+            var categoryDelete = await _categoryRepository
+                .DeleteElementAsync(category)
+                .ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteCategory(categoryDelete);
         }
-
-
-        /// <summary>
-        /// adding details 
-        /// </summary>
-        public void AddMaterials()
-        {
-            var materials = new List<string>
-            {
-                "Argile rouge", "Argile blanche", "Argile chamottée", "Argile noire", "Argile grès",
-            };
-
-            foreach (var material in materials)
-            {
-                if (!_context.Materials.Any(c => c.Label == material))
-                {
-                    var nouvelleDonnee = new Material { Label = material };
-                    _context.Materials.Add(nouvelleDonnee);
-                }
-            }
-
-            _context.SaveChanges();
-        }
-
 
         /// <summary>
         /// get all materials
@@ -229,9 +172,10 @@ namespace Service.Item
             if (LabelExiste != null)
                 throw new ArgumentException("L'action a échoué: la matériel existe déjà");
 
-            var materialCreated = await _materialRepository.CreateElementAsync(material).ConfigureAwait(false);
+            var materialCreated = await _materialRepository
+                .CreateElementAsync(material)
+                .ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteMaterial(materialCreated);
-
         }
 
         /// <summary>
@@ -246,7 +190,9 @@ namespace Service.Item
             if (material == null)
                 throw new ArgumentException("L'action a échoué: la matériel n'existe pas");
 
-            var materialDelete = await _materialRepository.DeleteElementAsync(material).ConfigureAwait(false);
+            var materialDelete = await _materialRepository
+                .DeleteElementAsync(material)
+                .ConfigureAwait(false);
             return DatailsItemMapper.TransformExiteMaterial(materialDelete);
         }
     }
