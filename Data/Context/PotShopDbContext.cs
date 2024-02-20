@@ -41,7 +41,7 @@ namespace Context
             );
 
             modelBuilder.Entity<Material>().HasData(
-              new Material { Id = 1, Label = "Argile rouge", Description = "Argile rouge description" },
+              new Material { Id = 1, Label = "Argile rouge", Description = "L’argile rouge de type illite est une argile très absorbante et adsorbante. Sa couleur apportée par sa richesse en oxyde de fer lui confère des propriétés matifiante, révélatrice de bonne mine mais aussi circulatoire et décongestionnante. Elle sera idéale pour les peaux couperosées et sujettes aux rougeurs. En masque, l'argile rouge ravive les peaux ternes et redonne force et éclat à une chevelure foncée. Pour des utilisations en argilothérapie, on se limitera à un usage par voie externe en cataplasme. Nom INCI : Illite et Kaolin. Origine : France." },
               new Material { Id = 2, Label = "Argile blanche", Description = "Argile blanche description" },
               new Material { Id = 4, Label = "Argile chamottée", Description = "Argile chamottée description" },
               new Material { Id = 5, Label = "Argile noire", Description = "Argile noire description" },

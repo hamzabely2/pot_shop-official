@@ -11,10 +11,10 @@ namespace Entity.Model
             public float? Price { get; set; }
             public int? Stock { get; set; }
             public string? Description { get; set; }
-            public DateTime? CreatedDate { get; set; } // Déclarée comme nullable
-            public DateTime? UpdateDate { get; set; }  // Déclarée comme nullable
-            public int CategoryId { get; set; } // Déclarée comme non-nullable
-            public int MaterialId { get; set; } // Déclarée comme non-nullable
+            public DateTime? CreatedDate { get; set; } 
+            public DateTime? UpdateDate { get; set; }  
+            public int CategoryId { get; set; } 
+            public int MaterialId { get; set; } 
             public virtual List<Color> Colors { get; set; } = new List<Color>();
             public virtual Material Materials { get; set; } = null!;
             public virtual Category Categories { get; set; } = null!;

@@ -223,14 +223,15 @@ namespace Service.User
                 throw new ArgumentException("L'action a échoué: le nouveau mot de passe ne correspond pas au mot de passe de confirmation");
 
 
-            // Mettre à jour le mot de passe dans la base de données
             if (!_connectionService.IsPasswordValid(request.NewPassword))
                 throw new ArgumentException("L'action a échoué: les mots de passe doivent comporter au moins un chiffre ('0' - '9'). Les mots de passe doivent contenir au moins une majuscule ('A' - 'Z').\\\"\"");
 
             if (request.OldPassword == request.NewPassword)
                 throw new ArgumentException("L'action a échoué: le nouveau mot de passe est le même que l'ancien");
 
-            user.PasswordHash = request.NewPassword;
+            var passwordHash = _connectionService.HashPassword(request.NewPassword);
+            user.PasswordHash = passwordHash;
+
             await _userRepository.UpdateElementAsync(user);
             var changePasswordResult = UserMapper.TransformDtoExit(user);
 
@@ -243,19 +244,22 @@ namespace Service.User
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> DeleteUser(int userId)
+        public async Task<UserRead> DeleteUser()
         {
-            var user = await _userRepository.GetByKeys(userId);
+            var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
+            int userConnectedId = userInfo.Id;
+            var user = await _userRepository.GetByKeys(userConnectedId);
 
             if (user == null)
                 throw new ArgumentException("L'action a échoué : l'ulisateur n'a pas été trouvée");
 
-            await _roleService.DeleteRoleAsync(userId);
+            await _roleService.DeleteRoleAsync(userConnectedId);
             Entity.Model.User userDelete = await _userRepository.DeleteElementAsync(user);
             if (userDelete == null)
                 throw new ArgumentException($"L'utilisateur ne existe pas.");
 
             return UserMapper.TransformDtoExit(userDelete);
+        }
         }
     }
 }

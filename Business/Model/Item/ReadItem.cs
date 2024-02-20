@@ -19,5 +19,7 @@ namespace Model.Item
         public List<ColorDto> Colors { get; set; }= new List<ColorDto>();
         public MaterialDto Materials { get; set; }
         public List<byte[]> Images { get; set; } = new List<byte[]>();
+        public DateTime? CreatedDate { get; set; }
+
     }
 }

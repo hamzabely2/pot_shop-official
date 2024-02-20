@@ -11,7 +11,7 @@ namespace Service.Interface.User
         Task<string> Login(UserLogin request);
         Task<UserRead> UpdateUser(UserUpdate request);
         Task<UserRead> UpdatePasswordUser(UserPassword request);
-        Task<UserRead> DeleteUser(int userId);
+        Task<UserRead> DeleteUser();
 
 
     }

@@ -44,6 +44,7 @@ namespace Mapper.Adress
 
             // item mapper
             CreateMap<Entity.Model.Item, ReadItem>();
+            CreateMap<CategoryDto, Category>();
             CreateMap<Category, CategoryDto>();
             CreateMap<Color, ColorDto>();
             CreateMap<Material, MaterialDto>();
@@ -53,8 +54,6 @@ namespace Mapper.Adress
             CreateMap<ItemUpdate, Entity.Model.Item>();          
             CreateMap<Cart, CartItem>();
             CreateMap<ColorDto, Color>();
-
-
 
             }
         }

@@ -100,7 +100,7 @@ namespace Service.Item
             List<CategoryDto> categoryList = new();
             foreach (Category categorie in categories)
             {
-                categoryList.Add(DatailsItemMapper.TransformExiteCategory(categorie));
+                categoryList.Add(_mapper.Map<CategoryDto>(categorie));
             }
             return categoryList;
         }
@@ -112,15 +112,15 @@ namespace Service.Item
         /// <returns></returns>
         public async Task<CategoryDto> CreateCategory(CategoryDto request)
         {
-            var category = DatailsItemMapper.TransformCreateCategory(request);
+            var category = _mapper.Map<Category>(request);
             var LabelExiste = await _categoryRepository.GetCategoryByName(request.Label);
             if (LabelExiste != null)
                 throw new ArgumentException("L'action a échoué: la catégorie existe déjà");
 
-            var categoryCreated = await _categoryRepository
+            Category categoryCreated = await _categoryRepository
                 .CreateElementAsync(category)
                 .ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteCategory(categoryCreated);
+            return _mapper.Map<CategoryDto>(categoryCreated);
         }
 
         /// <summary>
@@ -131,14 +131,14 @@ namespace Service.Item
         /// <exception cref="ArgumentException"></exception>
         public async Task<CategoryDto> DeleteCategory(int categoryId)
         {
-            var category = await _categoryRepository.GetByKeys(categoryId).ConfigureAwait(false);
+            Category category = await _categoryRepository.GetByKeys(categoryId).ConfigureAwait(false);
             if (category == null)
                 throw new ArgumentException("L'action a échoué: la catégorie n'existe pas");
 
-            var categoryDelete = await _categoryRepository
+            Category categoryDelete = await _categoryRepository
                 .DeleteElementAsync(category)
                 .ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteCategory(categoryDelete);
+            return _mapper.Map<CategoryDto>(categoryDelete);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Service.Item
             List<MaterialDto> materialList = new();
             foreach (Material material in materials)
             {
-                materialList.Add(DatailsItemMapper.TransformExiteMaterial(material));
+                materialList.Add(_mapper.Map<MaterialDto>(material));
             }
             return materialList;
         }
@@ -167,7 +167,7 @@ namespace Service.Item
         /// <returns></returns>
         public async Task<MaterialDto> CreateMaterial(MaterialDto request)
         {
-            var material = DatailsItemMapper.TransformCreateMaterial(request);
+            Material material = _mapper.Map<Material>(request);
             var LabelExiste = await _materialRepository.GetMaterialByName(request.Label);
             if (LabelExiste != null)
                 throw new ArgumentException("L'action a échoué: la matériel existe déjà");
@@ -175,7 +175,7 @@ namespace Service.Item
             var materialCreated = await _materialRepository
                 .CreateElementAsync(material)
                 .ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteMaterial(materialCreated);
+            return _mapper.Map<MaterialDto>(materialCreated);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Service.Item
             var materialDelete = await _materialRepository
                 .DeleteElementAsync(material)
                 .ConfigureAwait(false);
-            return DatailsItemMapper.TransformExiteMaterial(materialDelete);
+            return _mapper.Map<MaterialDto>(materialDelete);
         }
     }
 }

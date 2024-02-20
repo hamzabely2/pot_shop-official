@@ -12,10 +12,12 @@ namespace back_end.Controllers
     {
 
         private readonly IItemService _itemService;
+        private readonly ILogger<ItemController> _logger;
 
-        public ItemController(IItemService itemService)
+        public ItemController(IItemService itemService, ILogger<ItemController> logger)
         {
             _itemService = itemService;
+            _logger = logger;
         }
 
 
@@ -32,6 +34,7 @@ namespace back_end.Controllers
             try
             {
                 var result = await _itemService.GetListItem().ConfigureAwait(false);
+                _logger.LogInformation("la liste des artciles", result);
                 string message = "la liste des artciles";
                 return Ok(new { message, result });
             }
@@ -68,7 +71,7 @@ namespace back_end.Controllers
         /// <param name="itemDto"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        //[Authorize(Roles = RoleString.Admin)]
+        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]

@@ -4,9 +4,17 @@ using Ioc.Test;
 using Mapper.Adress;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+    loggerConfig.
+    ReadFrom.Configuration(context.Configuration)
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:1234");
+});
 
 builder.Services.AddHttpContextAccessor();
 
@@ -73,6 +81,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 builder.Services.AddHttpContextAccessor();
+
 app.UseCookiePolicy();
 app.UseHttpsRedirection();
 app.UseAuthentication();

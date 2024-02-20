@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Context.Interface;
 using Entity.Model;
+using Microsoft.Extensions.Logging;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
@@ -14,7 +15,6 @@ namespace Service.Item
         private readonly ColorIRepository _colorRepository;
         private readonly IDetailsItemService _detailsItemIService;
         private readonly IMapper _mapper;
-
         public ItemService(
             ImageIRepository imageRepository,
             PotShopIDbContext _idbcontext,
@@ -195,6 +195,7 @@ namespace Service.Item
             item.Colors.AddRange(colors);
 
             return _mapper.Map<ReadItem>(item);
+
         }
     }
 }

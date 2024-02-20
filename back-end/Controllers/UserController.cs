@@ -169,17 +169,17 @@ namespace back_end.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete/{userId}")]
-        [Authorize(Roles = RoleString.Admin)]
+        [HttpDelete("delete")]
+        //[Authorize(Roles = RoleString.Admin)]
         [Authorize(Roles = RoleString.User)]
         [ProducesResponseType(typeof(UserRead), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> DeleteUser(int userId)
+        public async Task<ActionResult> DeleteUser()
         {
             try
             {
-                var result = await _userService.DeleteUser(userId);
+                var result = await _userService.DeleteUser();
                 string message = "utilisateur supprimé avec succès";
                 return Ok(new { message, result });
             }
