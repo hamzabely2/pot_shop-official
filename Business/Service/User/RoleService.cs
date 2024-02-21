@@ -21,29 +21,6 @@ namespace Service.User
             _roleUserRepository = roleUserRepository;
         }
 
-        /// <summary>
-        /// adding roles
-        /// </summary>
-        public async void AddRoles()
-        {
-            var roles = new List<string>
-            {
-                 "User","Admin","SuperAdmin",
-            };
-
-            foreach (var role in roles)
-            {
-                if (!_context.Roles.Any(c => c.Name == role))
-                {
-                    var nouvelleDonnee = new Role { Name = role };
-                    _context.Roles.Add(nouvelleDonnee);
-                }
-            }
-
-            _context.SaveChanges();
-        }
-
-
 
         public async Task<RoleUser> AssignRoleAsync(int userId, int roleId)
         {

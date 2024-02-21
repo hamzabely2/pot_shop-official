@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Context.Interface;
 using Entity.Model;
-using Mapper.DetailsItem;
 using Model.DetailsItem;
 using Repository.Interface.Item;
 using Service.Interface.Item;

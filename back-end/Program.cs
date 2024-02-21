@@ -32,7 +32,7 @@ else
     builder.Services.ConfigureInjectionDependencyService();
 }
 
-builder.Services.AddAutoMapper(typeof(AdressMapper));
+builder.Services.AddAutoMapper(typeof(AutoMapperAll));
 
 // Adding Authentication
 var validAudience = builder.Configuration["JWT:ValidAudience"];

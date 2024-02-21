@@ -6,9 +6,10 @@
         public string Description { get; set; }
 
     }
-
     public class ColorDto
     {
+        public string Label { get; set; }
+
         public string Hex { get; set; }
     }
 
@@ -18,7 +19,4 @@
         public string Description { get; set; }
 
     }
-
-
-
 }

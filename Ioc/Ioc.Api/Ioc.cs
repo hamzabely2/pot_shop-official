@@ -29,9 +29,10 @@ namespace Ioc.Api
             services.AddScoped<ItemIRepository, ItemRepository>();
             services.AddScoped<MaterialIRepository, MaterialRepository>();
             services.AddScoped<ColorIRepository, ColorRepository>();
+            services.AddScoped<IColorItemRepository, ColorItemRepository>();
             services.AddScoped<CategoryIRepository, CategoryRepository>();
             services.AddScoped<UserIRepository, UserRepository>();
-            services.AddScoped<AdressIRepository, AdressRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<RoleIRepository, RoleRepository>();
             services.AddScoped<RoleUserIRepository, RoleUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
@@ -47,7 +48,7 @@ namespace Ioc.Api
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IAdressService, AdressService>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IDetailsItemService, DetailsItemService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICartService, CartService>();

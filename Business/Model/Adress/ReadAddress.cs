@@ -1,6 +1,12 @@
-﻿namespace Model.Adress
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Model.Adress
 {
-    public class AdressRead
+    public class ReadAddress
     {
         public string Id { get; set; } = null!;
         public string City { get; set; } = null!;

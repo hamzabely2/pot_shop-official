@@ -32,11 +32,12 @@ namespace Ioc.Test
             services.AddScoped<ColorIRepository, ColorRepository>();
             services.AddScoped<CategoryIRepository, CategoryRepository>();
             services.AddScoped<UserIRepository, UserRepository>();
-            services.AddScoped<AdressIRepository, AdressRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<RoleIRepository, RoleRepository>();
             services.AddScoped<RoleUserIRepository, RoleUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IColorItemRepository, ColorItemRepository>();
 
             return services;
         }
@@ -53,7 +54,7 @@ namespace Ioc.Test
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IAdressService, AdressService>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IDetailsItemService, DetailsItemService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICartService, CartService>();

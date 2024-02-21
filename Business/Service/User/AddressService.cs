@@ -10,18 +10,18 @@ using Service.Interface.User;
 
 namespace Service.User
 {
-    public class AdressService : IAdressService
+    public class AddressService : IAddressService
     {
-        private readonly AdressIRepository _adressRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IConnectionService _connectionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
 
 
 
-        public AdressService(AdressIRepository adressRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        public AddressService(IAddressRepository addressRepository, IConnectionService connectionService, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
-            _adressRepository = adressRepository;
+            _addressRepository = addressRepository;
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
@@ -29,12 +29,12 @@ namespace Service.User
         }
 
         /// <summary> 
-        /// add  adress
+        /// add address
         /// </summary>
         /// <param name="request">.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">Le message d'exception.</exception>
-        public async Task<AdressRead> CreateAdress(AdressAdd request)
+        public async Task<ReadAddress> CreateAddress(AddAddress request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
@@ -42,12 +42,12 @@ namespace Service.User
             if (userId == 0)
                 throw new ArgumentException("L'action a échoué : l'utilisateur n'existe pas");
 
-            Adress addressEntity = _mapper.Map<Adress>(request);
+            Address addressEntity = _mapper.Map<Address>(request);
             addressEntity.UserId = userId;
 
-            Adress addedAddress = await _adressRepository.CreateElementAsync(addressEntity).ConfigureAwait(false);
+            Address addedAddress = await _addressRepository.CreateElementAsync(addressEntity).ConfigureAwait(false);
 
-            return _mapper.Map<AdressRead>(addedAddress);
+            return _mapper.Map<ReadAddress>(addedAddress);
         }
 
 
@@ -56,18 +56,18 @@ namespace Service.User
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<IEnumerable<AdressRead>> GetAddressesOfAUser()
+        public async Task<IEnumerable<ReadAddress>> GetAddressesOfAUser()
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
             if (userInfo.Id == 0)
                 throw new ArgumentException("l'action a échoué :l'utilisateur  ne existe pas");
 
-            var addresselist = await _adressRepository.GetAdressesByUserId(userId).ConfigureAwait(false);
+            var addresselist = await _addressRepository.GetAddressesByUserId(userId).ConfigureAwait(false);
             if (addresselist == null)
                 throw new ArgumentException("l'action a échoué");
 
-            return _mapper.Map<IEnumerable<AdressRead>>(addresselist);
+            return _mapper.Map<IEnumerable<ReadAddress>>(addresselist);
         }
 
         /// <summary>
@@ -77,36 +77,36 @@ namespace Service.User
         /// <param name="IdAddresse"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<AdressRead> UpdateAdress(AdressPut request, int IdAddress)
+        public async Task<ReadAddress> UpdateAddress(PutAddress request, int IdAddress)
         {
-            var existingAddress = await _adressRepository.GetByKeys(IdAddress).ConfigureAwait(false);
+            var existingAddress = await _addressRepository.GetByKeys(IdAddress).ConfigureAwait(false);
             if (existingAddress == null)
                 throw new ArgumentException("L'action a échoué : l'adresse n'a pas été trouvée");
 
             _mapper.Map(request, existingAddress);
 
-            var updatedAddress = await _adressRepository.UpdateElementAsync(existingAddress).ConfigureAwait(false);
+            var updatedAddress = await _addressRepository.UpdateElementAsync(existingAddress).ConfigureAwait(false);
 
-            return _mapper.Map<AdressRead>(updatedAddress);
+            return _mapper.Map<ReadAddress>(updatedAddress);
         }
 
 
-        ///delete adress <summary>
+        ///delete address <summary>
         /// </summary>
-        /// <param name="IdAdresse"></param>
+        /// <param name="IdAddresse"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<Adress> DeleteAdress(int IdAdress)
+        public async Task<Address> DeleteAddress(int IdAddress)
         {
-            var address = await _adressRepository.GetByKeys(IdAdress);
+            var address = await _addressRepository.GetByKeys(IdAddress);
             if (address == null)
                 throw new ArgumentException("L'action a échoué : l'adresse n'a pas été trouvée");
 
-            var deleteAdress = await _adressRepository.DeleteElementAsync(address);
-            if (deleteAdress == null)
+            var deleteAddress = await _addressRepository.DeleteElementAsync(address);
+            if (deleteAddress == null)
                 throw new ArgumentException("L'action a échoué : l'adresse n'a pas été supprime");
 
-            return deleteAdress;
+            return deleteAddress;
         }
     }
 }

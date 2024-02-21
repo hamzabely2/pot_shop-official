@@ -19,7 +19,7 @@ namespace Context.Migrations
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Entity.Model.Adress", b =>
+            modelBuilder.Entity("Entity.Model.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace Context.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Adresses");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Entity.Model.Cart", b =>
@@ -138,14 +138,59 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<string>("Label")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Colors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Hex = "#FF0000",
+                            Label = "Rouge"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Hex = "#0046FF",
+                            Label = "Bleu"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Hex = "#13FF00 ",
+                            Label = "Vert"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Hex = "#FFC300",
+                            Label = "Orange"
+                        });
+                });
+
+            modelBuilder.Entity("Entity.Model.ColorItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColorId");
+
                     b.HasIndex("ItemId");
 
-                    b.ToTable("Colors");
+                    b.ToTable("ColorsItems");
                 });
 
             modelBuilder.Entity("Entity.Model.Comment", b =>
@@ -207,25 +252,27 @@ namespace Context.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<float?>("Price")
+                    b.Property<float>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int?>("Stock")
+                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateDate")
+                    b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -259,31 +306,25 @@ namespace Context.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Argile rouge description",
+                            Description = "L’argile rouge de type illite est une argile très absorbante et adsorbante. Sa couleur apportée par sa richesse en oxyde de fer lui confère des propriétés matifiante, révélatrice de bonne mine mais aussi circulatoire et décongestionnante. Elle sera idéale pour les peaux couperosées et sujettes aux rougeurs. En masque, l'argile rouge ravive les peaux ternes et redonne force et éclat à une chevelure foncée. Pour des utilisations en argilothérapie, on se limitera à un usage par voie externe en cataplasme. Nom INCI : Illite et Kaolin. Origine : France.",
                             Label = "Argile rouge"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Argile blanche description",
+                            Description = "L'argile à modeler blanche « Terra 92 » présente l'avantage d'être non toxique et varie du blanc à la couleur crème quand la température de cuisson augmente.",
                             Label = "Argile blanche"
                         },
                         new
                         {
-                            Id = 4,
-                            Description = "Argile chamottée description",
-                            Label = "Argile chamottée"
-                        },
-                        new
-                        {
                             Id = 5,
-                            Description = "Argile noire description",
+                            Description = "En sol sableux, un compost de cette argile permet de retenir l'eau, de fixer les particules et d'absorber au mieux les nutriments. L'argile blanche participe également au pralinage pour la plantation ou la transplantation d'arbres fruitiers, arbustes à baie et vignes",
                             Label = "Argile noire"
                         },
                         new
                         {
                             Id = 6,
-                            Description = "Argile grès description",
+                            Description = "Le grès est une argile haute température : sa température de cuisson doit être supérieure à 1200°C. Imperméable, résistante au gel et aux éraflures et disposant d'une très grande dureté, la terre de grès pour poterie est idéale pour la céramique utilitaire et extérieure.",
                             Label = "Argile grès"
                         });
                 });
@@ -366,6 +407,23 @@ namespace Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "User"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "SuperAdmin"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Model.RoleUser", b =>
@@ -425,10 +483,10 @@ namespace Context.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Entity.Model.Adress", b =>
+            modelBuilder.Entity("Entity.Model.Address", b =>
                 {
                     b.HasOne("Entity.Model.User", null)
-                        .WithMany("Adresses")
+                        .WithMany("Addresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -451,11 +509,23 @@ namespace Context.Migrations
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("Entity.Model.Color", b =>
+            modelBuilder.Entity("Entity.Model.ColorItem", b =>
                 {
-                    b.HasOne("Entity.Model.Item", null)
-                        .WithMany("Colors")
-                        .HasForeignKey("ItemId");
+                    b.HasOne("Entity.Model.Color", "Color")
+                        .WithMany("Colors_Items")
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Model.Item", "Item")
+                        .WithMany("ColorsItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Entity.Model.Comment", b =>
@@ -523,9 +593,14 @@ namespace Context.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Entity.Model.Color", b =>
+                {
+                    b.Navigation("Colors_Items");
+                });
+
             modelBuilder.Entity("Entity.Model.Item", b =>
                 {
-                    b.Navigation("Colors");
+                    b.Navigation("ColorsItems");
                 });
 
             modelBuilder.Entity("Entity.Model.Material", b =>
@@ -545,7 +620,7 @@ namespace Context.Migrations
 
             modelBuilder.Entity("Entity.Model.User", b =>
                 {
-                    b.Navigation("Adresses");
+                    b.Navigation("Addresses");
 
                     b.Navigation("Cart");
 

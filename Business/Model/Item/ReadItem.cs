@@ -1,4 +1,5 @@
-﻿using Model.DetailsItem;
+﻿using Entity.Model;
+using Model.DetailsItem;
 using System;
 using System.Collections.Generic;
 using System.Linq;

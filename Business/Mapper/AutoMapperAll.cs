@@ -9,18 +9,18 @@ using System.Collections.Generic;
 
 namespace Mapper.Adress
 {
-    public class AdressMapper : Profile
+    public class AutoMapperAll : Profile
     {
-        public AdressMapper()
+        public AutoMapperAll()
         {
             //adress mapper
-            CreateMap<AdressAdd, Entity.Model.Adress>()
+            CreateMap<AddAddress, Entity.Model.Address>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
-            CreateMap<Entity.Model.Adress, AdressRead>();
+            CreateMap<Entity.Model.Address, ReadAddress>();
 
-            CreateMap<AdressPut, Entity.Model.Adress>()
+            CreateMap<PutAddress, Entity.Model.Address>()
                 .ForMember(dest => dest.UpdateDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             //cart mapper
@@ -33,7 +33,7 @@ namespace Mapper.Adress
             CreateMap<Cart, CartItem>();
 
             //order mapper
-            CreateMap<Order,ReadOrder>();
+            CreateMap<Order, ReadOrder>();
 
             CreateMap<Cart, OrderItem>()
             .ForMember(dest => dest.Item, opt => opt.MapFrom(src => src.Items))
@@ -51,13 +51,15 @@ namespace Mapper.Adress
 
 
             CreateMap<ItemAdd, Entity.Model.Item>();
-            CreateMap<ItemUpdate, Entity.Model.Item>();          
+            CreateMap<ItemUpdate, Entity.Model.Item>();
             CreateMap<Cart, CartItem>();
             CreateMap<ColorDto, Color>();
 
-            }
-        }
+          
 
+        }
     }
+
+}
 
 

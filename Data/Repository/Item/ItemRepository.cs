@@ -61,11 +61,26 @@ namespace Repository.Item
 
         public async Task<List<Color>> GetAllColorsForItem(int itemId)
         {
-            var colorsData = await _idbcontext
-                .Colors.Where(col => col.ItemId == itemId)
+            var colorItems = await _idbcontext.ColorsItems
+                .Include(ci => ci.Color)
+                .Where(ci => ci.ItemId == itemId)
                 .ToListAsync()
                 .ConfigureAwait(false);
-            return colorsData;
+
+            List<Color> colors = new List<Color>();
+
+            foreach (var colorItem in colorItems)
+            {
+                // Vérifier si colorItem.Color n'est pas null avant d'essayer d'y accéder
+                if (colorItem.Color != null)
+                {
+                    colors.Add(colorItem.Color);
+                }
+            }
+
+            return colors;
         }
+
+
     }
 }

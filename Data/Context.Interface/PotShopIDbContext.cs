@@ -5,10 +5,11 @@ namespace Context.Interface
 {
     public interface PotShopIDbContext : IDb
     {        
-        DbSet<Adress> Adresses { get; set; }
+        DbSet<Address> Addresses { get; set; }
         DbSet<Cart> Carts { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Color> Colors { get; set; }
+        DbSet<ColorItem> ColorsItems { get; set; }
         DbSet<Comment> Comments { get; set; }
         DbSet<Image> Images { get; set; }
         DbSet<Item> Items { get; set; }

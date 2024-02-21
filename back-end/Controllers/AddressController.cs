@@ -9,12 +9,12 @@ namespace back_end.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = RoleString.User)]
-    public class AdressController : Controller
+    public class AddressController : Controller
     {
-        private readonly IAdressService _adressService;
-        public AdressController(IAdressService adressService)
+        private readonly IAddressService _addressService;
+        public AddressController(IAddressService addressService)
         {
-            _adressService = adressService;
+            _addressService = addressService;
         }
 
         /// add addresse <summary>
@@ -22,14 +22,14 @@ namespace back_end.Controllers
         /// <param name="commentsDto"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        [ProducesResponseType(typeof(AdressRead), 200)]
+        [ProducesResponseType(typeof(ReadAddress), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult<AdressRead>> CreateAdress(AdressAdd request)
+        public async Task<ActionResult<ReadAddress>> CreateAddress(AddAddress request)
         {
             try
             {
-                AdressRead result = await _adressService.CreateAdress(request);
+                ReadAddress result = await _addressService.CreateAddress(request);
                 string message = "l'adresse a été ajoutée avec succès";
                 return Ok(new { message, result });
             }
@@ -43,14 +43,14 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("user")]
-        [ProducesResponseType(typeof(AdressRead), 200)]
+        [ProducesResponseType(typeof(ReadAddress), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetAddressesOfAUser()
         {
             try
             {
-                IEnumerable<AdressRead> result = await _adressService.GetAddressesOfAUser();
+                IEnumerable<ReadAddress> result = await _addressService.GetAddressesOfAUser();
                 string message = "les adresses de cet utilisateur";
                 return Ok(new { message, result });
             }
@@ -65,15 +65,15 @@ namespace back_end.Controllers
         /// <param name="request"></param>
         /// <param name="adressId"></param>
         /// <returns></returns>
-        [HttpPut("update/{adressId}")]
-        [ProducesResponseType(typeof(AdressRead), 200)]
+        [HttpPut("update/{addressId}")]
+        [ProducesResponseType(typeof(ReadAddress), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> UpdateAdress(AdressPut request, int adressId)
+        public async Task<ActionResult> UpdateAddress(PutAddress request, int adressId)
         {
             try
             {
-                AdressRead result = await _adressService.UpdateAdress(request, adressId);
+                ReadAddress result = await _addressService.UpdateAddress(request, adressId);
                 string message = "la modification  de l'adresse a réussi";
                 return Ok(new { message, result });
             }
@@ -83,19 +83,19 @@ namespace back_end.Controllers
             }
         }
 
-        /// delete adress <summary>
+        /// delete address <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("delete/{id}")]
-        [ProducesResponseType(typeof(AdressRead), 200)]
+        [ProducesResponseType(typeof(ReadAddress), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> DeleteAdress(int id)
+        public async Task<ActionResult> DeleteAddress(int id)
         {
             try
             {
-                var result = await _adressService.DeleteAdress(id);
+                var result = await _addressService.DeleteAddress(id);
                 string message = "la suppression de l'adresse a réussi";
                 return Ok(new { message, result });
             }

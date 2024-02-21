@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model.Adress
 {
-    public class AdressPut
+    public class PutAddress
     {
         [Required(ErrorMessage = "insérez la Ville")]
         public string City { get; set; } = null!;

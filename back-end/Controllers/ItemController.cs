@@ -71,7 +71,7 @@ namespace back_end.Controllers
         /// <param name="itemDto"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        [Authorize(Roles = RoleString.Admin)]
+        //[Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]

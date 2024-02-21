@@ -27,19 +27,6 @@ namespace Repository.Item
         }
 
 
-        public async Task DeleteAllColorsForItem(int itemId)
-        {
-            var colorsToDelete = await _table
-                .Where(img => img.ItemId == itemId)
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            foreach (var color in colorsToDelete)
-            {
-                _table.Remove(color);
-            }
-
-            await _idbcontext.SaveChangesAsync().ConfigureAwait(false);
-        }
+      
     }
 }

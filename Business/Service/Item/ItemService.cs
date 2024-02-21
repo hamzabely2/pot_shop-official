@@ -2,6 +2,7 @@
 using Context.Interface;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
+using Model.DetailsItem;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
@@ -13,6 +14,7 @@ namespace Service.Item
         private readonly ItemIRepository _itemRepository;
         private readonly ImageIRepository _imageRepository;
         private readonly ColorIRepository _colorRepository;
+        private readonly IColorItemRepository _colorItemRepository;
         private readonly IDetailsItemService _detailsItemIService;
         private readonly IMapper _mapper;
         public ItemService(
@@ -21,6 +23,7 @@ namespace Service.Item
             ItemIRepository itemRepository,
             ColorIRepository colorRepository,
             IDetailsItemService detailsItemIService,
+            IColorItemRepository colorItemRepository,
             IMapper mapper
         )
         {
@@ -29,6 +32,7 @@ namespace Service.Item
             _mapper = mapper;
             _imageRepository = imageRepository;
             _colorRepository = colorRepository;
+            _colorItemRepository = colorItemRepository;
         }
 
         /// Get item by id <summary>
@@ -86,6 +90,8 @@ namespace Service.Item
 
         public async Task<ReadItem> CreateItem(ItemAdd request)
         {
+            var memoryStream = new MemoryStream();
+
             var existingItem = await _itemRepository
                 .GetItemByName(request.Name)
                 .ConfigureAwait(false);
@@ -101,17 +107,23 @@ namespace Service.Item
                 );
             }
 
+            if (request.ImagesData != null)
+            {
+                //await request.ImagesData.OpenReadStream().CopyToAsync(memoryStream);
+            }
+
+
             var newItem = _mapper.Map<Entity.Model.Item>(request);
             newItem.CreatedDate = DateTime.Now;
             newItem.UpdateDate = DateTime.Now;
             await _itemRepository.CreateElementAsync(newItem).ConfigureAwait(false);
 
-            var image = new Image { ItemId = newItem.Id, ImageData = request.ImagesData };
+            var image = new Image { ItemId = newItem.Id, ImageData = memoryStream.ToArray() };
 
-            var color = new Color { ItemId = newItem.Id, Hex = request.Color };
+            var color = new ColorItem { ItemId = newItem.Id, ColorId = request.ColorId };
 
             await _imageRepository.CreateElementAsync(image).ConfigureAwait(false);
-            await _colorRepository.CreateElementAsync(color).ConfigureAwait(false);
+            await _colorItemRepository.CreateElementAsync(color).ConfigureAwait(false);
             var createdItem = await GetItemDetails(newItem.Id).ConfigureAwait(false);
 
             return createdItem;
@@ -157,7 +169,6 @@ namespace Service.Item
             }
 
             await _imageRepository.DeleteAllImagesForItem(itemId).ConfigureAwait(false);
-            await _colorRepository.DeleteAllColorsForItem(itemId).ConfigureAwait(false);
             await _itemRepository.DeleteElementAsync(existingItem).ConfigureAwait(false);
 
             var item = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
@@ -191,11 +202,15 @@ namespace Service.Item
             item.Images.AddRange(images);
 
             var colors = await _itemRepository.GetAllColorsForItem(itemId).ConfigureAwait(false);
-            item.Colors.Clear();
-            item.Colors.AddRange(colors);
 
-            return _mapper.Map<ReadItem>(item);
+            // Mappez votre objet Item vers ReadItem en utilisant AutoMapper
+            var readItem = _mapper.Map<ReadItem>(item);
 
+            // Mappez les couleurs séparément
+            readItem.Colors = _mapper.Map<List<ColorDto>>(colors);
+
+            return readItem;
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entity.Model;
+using Model.DetailsItem;
 
 namespace Repository.Interface.Item
 {

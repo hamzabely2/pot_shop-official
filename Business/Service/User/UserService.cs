@@ -76,7 +76,6 @@ namespace Service.User
 
         public async Task<string> Register(UserRegister request)
         {
-            _roleService.AddRoles();
 
             var firstNameExiste = _userRepository.GetUserByName(request.FirstName);
             if (firstNameExiste.Result != null)
@@ -261,5 +260,5 @@ namespace Service.User
             return UserMapper.TransformDtoExit(userDelete);
         }
         }
-    }
+    
 }

@@ -6,7 +6,8 @@ namespace Entity.Model
     {
         [Key]
         public int Id { get; set; }
-        public int? ItemId { get; set; }
+        public string? Label { get; set; }
         public string Hex { get; set; } = null!;
+        public virtual List<ColorItem> Colors_Items { get; set; }
     }
 }

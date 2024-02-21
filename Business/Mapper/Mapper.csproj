@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Service.Interface\Service.Interface.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Adress\" />
+  </ItemGroup>
+
 </Project>

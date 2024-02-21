@@ -31,6 +31,23 @@ namespace Context.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Colors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Label = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Hex = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Colors", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
@@ -133,14 +150,14 @@ namespace Context.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Price = table.Column<float>(type: "float", nullable: true),
-                    Stock = table.Column<int>(type: "int", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    Price = table.Column<float>(type: "float", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     MaterialId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -163,7 +180,7 @@ namespace Context.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Adresses",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -181,9 +198,9 @@ namespace Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adresses", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Adresses_Users_UserId",
+                        name: "FK_Addresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -276,23 +293,29 @@ namespace Context.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Colors",
+                name: "ColorsItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ItemId = table.Column<int>(type: "int", nullable: true),
-                    Hex = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Colors", x => x.Id);
+                    table.PrimaryKey("PK_ColorsItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Colors_Items_ItemId",
+                        name: "FK_ColorsItems_Colors_ColorId",
+                        column: x => x.ColorId,
+                        principalTable: "Colors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ColorsItems_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -335,20 +358,40 @@ namespace Context.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Colors",
+                columns: new[] { "Id", "Hex", "Label" },
+                values: new object[,]
+                {
+                    { 1, "#FF0000", "Rouge" },
+                    { 2, "#0046FF", "Bleu" },
+                    { 3, "#13FF00 ", "Vert" },
+                    { 4, "#FFC300", "Orange" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Materials",
                 columns: new[] { "Id", "Description", "Label" },
                 values: new object[,]
                 {
-                    { 1, "Argile rouge description", "Argile rouge" },
-                    { 2, "Argile blanche description", "Argile blanche" },
-                    { 4, "Argile chamottée description", "Argile chamottée" },
-                    { 5, "Argile noire description", "Argile noire" },
-                    { 6, "Argile grès description", "Argile grès" }
+                    { 1, "L’argile rouge de type illite est une argile très absorbante et adsorbante. Sa couleur apportée par sa richesse en oxyde de fer lui confère des propriétés matifiante, révélatrice de bonne mine mais aussi circulatoire et décongestionnante. Elle sera idéale pour les peaux couperosées et sujettes aux rougeurs. En masque, l'argile rouge ravive les peaux ternes et redonne force et éclat à une chevelure foncée. Pour des utilisations en argilothérapie, on se limitera à un usage par voie externe en cataplasme. Nom INCI : Illite et Kaolin. Origine : France.", "Argile rouge" },
+                    { 2, "L'argile à modeler blanche « Terra 92 » présente l'avantage d'être non toxique et varie du blanc à la couleur crème quand la température de cuisson augmente.", "Argile blanche" },
+                    { 5, "En sol sableux, un compost de cette argile permet de retenir l'eau, de fixer les particules et d'absorber au mieux les nutriments. L'argile blanche participe également au pralinage pour la plantation ou la transplantation d'arbres fruitiers, arbustes à baie et vignes", "Argile noire" },
+                    { 6, "Le grès est une argile haute température : sa température de cuisson doit être supérieure à 1200°C. Imperméable, résistante au gel et aux éraflures et disposant d'une très grande dureté, la terre de grès pour poterie est idéale pour la céramique utilitaire et extérieure.", "Argile grès" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "User" },
+                    { 2, "Admin" },
+                    { 3, "SuperAdmin" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Adresses_UserId",
-                table: "Adresses",
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -362,8 +405,13 @@ namespace Context.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Colors_ItemId",
-                table: "Colors",
+                name: "IX_ColorsItems_ColorId",
+                table: "ColorsItems",
+                column: "ColorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ColorsItems_ItemId",
+                table: "ColorsItems",
                 column: "ItemId");
 
             migrationBuilder.CreateIndex(
@@ -405,13 +453,13 @@ namespace Context.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Adresses");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
-                name: "Colors");
+                name: "ColorsItems");
 
             migrationBuilder.DropTable(
                 name: "Comments");
@@ -424,6 +472,9 @@ namespace Context.Migrations
 
             migrationBuilder.DropTable(
                 name: "UsersRoles");
+
+            migrationBuilder.DropTable(
+                name: "Colors");
 
             migrationBuilder.DropTable(
                 name: "Items");
