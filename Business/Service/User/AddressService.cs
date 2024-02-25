@@ -42,6 +42,11 @@ namespace Service.User
             if (userId == 0)
                 throw new ArgumentException("L'action a échoué : l'utilisateur n'existe pas");
 
+            if(request.Code <= 0 || request.Code == null)       
+                throw new ArgumentException("Code postale non valide");
+
+            
+
             Address addressEntity = _mapper.Map<Address>(request);
             addressEntity.UserId = userId;
 

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Context.Interface;
 using Entity.Model;
-using Microsoft.Extensions.Logging;
 using Model.DetailsItem;
 using Model.Item;
 using Repository.Interface.Item;
 using Service.Interface.Item;
+using System.Drawing;
+using System.IO;
 
 namespace Service.Item
 {
@@ -203,14 +204,59 @@ namespace Service.Item
 
             var colors = await _itemRepository.GetAllColorsForItem(itemId).ConfigureAwait(false);
 
-            // Mappez votre objet Item vers ReadItem en utilisant AutoMapper
             var readItem = _mapper.Map<ReadItem>(item);
 
-            // Mappez les couleurs séparément
             readItem.Colors = _mapper.Map<List<ColorDto>>(colors);
 
             return readItem;
         }
 
+        /// <summary>
+        /// add image by item
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<ReadItem> AddImageByItem(AddImageByItem request)
+        {
+            var item = await _itemRepository.GetItemByIdWithDetails(request.ItemId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException("L'article n'a pas été trouvé.");
+            }
+
+            var image = new Image { ItemId = item.Id, ImageData = request.ImageData };
+
+             await _imageRepository.CreateElementAsync(image).ConfigureAwait(false);
+
+            var createdItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+
+            return createdItem;
+
+        }
+
+        /// <summary>
+        /// add color by item
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<ReadItem> AddColorByItem(AddColorByItem request)
+        {
+            var item = await _itemRepository.GetItemByIdWithDetails(request.ItemId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException("L'article n'a pas été trouvé.");
+            }
+
+            var color = new ColorItem { ItemId = item.Id, ColorId = request.ColorId };
+
+            await _colorItemRepository.CreateElementAsync(color).ConfigureAwait(false);
+            var createdItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+
+            return createdItem;
+        }   
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Entity.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Model.DetailsItem;
 using Model.Item;
 using Service.Interface.Item;
 
@@ -71,7 +72,7 @@ namespace back_end.Controllers
         /// <param name="itemDto"></param>
         /// <returns></returns>
         [HttpPost("create")]
-        //[Authorize(Roles = RoleString.Admin)]
+        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
@@ -95,7 +96,7 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("update/{itemId}")]
-        //[Authorize(Roles = RoleString.Admin)]
+        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
@@ -118,7 +119,7 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("delete/{itemId}")]
-       //[Authorize(Roles = RoleString.Admin)]
+        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
@@ -128,6 +129,52 @@ namespace back_end.Controllers
             {
                 var result = await _itemService.DeleteItem(itemId);
                 string message = "article a été supprime avec succès";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// add image by item <summary>
+        /// </summary>
+        /// <param name="itemDto"></param>
+        /// <returns></returns>
+        [HttpPost("create/image")]
+        [Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> AddImageByItem(AddImageByItem request)
+        {
+            try
+            {
+                var result = await _itemService.AddImageByItem(request).ConfigureAwait(false);
+                string message = "L'image a été ajoutée avec succès";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// add color by item <summary>
+        /// </summary>
+        /// <param name="itemDto"></param>
+        /// <returns></returns>
+        [HttpPost("create/color")]
+        [Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> AddColorByItem(AddColorByItem request)
+        {
+            try
+            {
+                var result = await _itemService.AddColorByItem(request).ConfigureAwait(false);
+                string message = "La couleur a été ajoutée avec succès";
                 return Ok(new { message, result });
             }
             catch (Exception ex)

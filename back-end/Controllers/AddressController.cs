@@ -65,15 +65,15 @@ namespace back_end.Controllers
         /// <param name="request"></param>
         /// <param name="adressId"></param>
         /// <returns></returns>
-        [HttpPut("update/{addressId}")]
+        [HttpPut("update/{id}")]
         [ProducesResponseType(typeof(ReadAddress), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> UpdateAddress(PutAddress request, int adressId)
+        public async Task<ActionResult> UpdateAddress(PutAddress request, int id)
         {
             try
             {
-                ReadAddress result = await _addressService.UpdateAddress(request, adressId);
+                ReadAddress result = await _addressService.UpdateAddress(request, id);
                 string message = "la modification  de l'adresse a réussi";
                 return Ok(new { message, result });
             }

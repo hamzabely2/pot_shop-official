@@ -19,4 +19,18 @@
         public string Description { get; set; }
 
     }
+
+    public class AddColorByItem
+    {
+        public int ColorId { get; set; }
+        public int ItemId { get; set; }
+
+    }
+
+    public class AddImageByItem
+    {
+        public int ItemId { get; set; }
+        public byte[]? ImageData { get; set; }
+
+    }
 }

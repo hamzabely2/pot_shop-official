@@ -20,6 +20,6 @@ namespace Model.Adress
             public string Street { get; set; } = null!;
 
             [Required(ErrorMessage = "insérez un code postal")]
-            public int? Code { get; set; }
+            public int Code { get; set; }
     }
 }

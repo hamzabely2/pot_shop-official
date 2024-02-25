@@ -1,12 +1,8 @@
 ﻿using Entity.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model.Cart;
-using Model.Item;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Service.Interface.Order;
-using Service.Order;
 
 namespace back_end.Controllers
 {
@@ -67,20 +63,21 @@ namespace back_end.Controllers
             }
         }
 
-
-        /// delete item in the cards <summary>
+        /// update cart <summary>
         /// </summary>
+        /// <param name=""></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete/{itemId}")]
+        [HttpPut("update")]
         [ProducesResponseType(typeof(IEnumerable<CartItem>), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> DeleteItemInTheCart(int itemId)
+        public async Task<ActionResult> UpdateItem(UpdateCart request)
         {
             try
             {
-                var result = await _cartService.DeleteItemInTheCart(itemId).ConfigureAwait(false);
-                string message = "l'article a été supprime avec succès";
+                var result = await _cartService.UpdateCart(request);
+                string message = "La quantité a été modifiée avec succèss";
                 return Ok(new { message, result });
             }
             catch (Exception ex)
@@ -89,5 +86,25 @@ namespace back_end.Controllers
             }
         }
 
+        /// delete item in the cards <summary>
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("delete/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<CartItem>), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> DeleteItemInTheCart(int id)
+        {
+            try
+            {
+                var result = await _cartService.DeleteItemInTheCart(id).ConfigureAwait(false);
+                string message = "l'article a été supprime avec succès";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

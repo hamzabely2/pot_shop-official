@@ -39,7 +39,7 @@ namespace Service.Order
             _itemRepository = itemRepository;
             _connectionService = connectionService;
             _httpContextAccessor = httpContextAccessor;
-            _mapper = mapper;
+            _mapper = mapper;;
             _itemService = itemService;
         }
 
@@ -67,8 +67,8 @@ namespace Service.Order
 
             if (existingCartItem != null)
             {
-                existingCartItem.Quantity = request.Quantity;
-                existingCartItem.Subtotal = item.Price * request.Quantity;
+                existingCartItem.Quantity = existingCartItem.Quantity + request.Quantity;
+                existingCartItem.Subtotal = item.Price * existingCartItem.Quantity;
                 existingCartItem.UpdateDate = DateTime.UtcNow;
                 await _cartRepository.UpdateElementAsync(existingCartItem).ConfigureAwait(false);
 
@@ -124,14 +124,14 @@ namespace Service.Order
         /// <param name="ItemId"></param>
         /// <returns></returns>
         /// <summary>
-        public async Task<IEnumerable<CartItem>> DeleteItemInTheCart(int ItemId)
+        public async Task<IEnumerable<CartItem>> DeleteItemInTheCart(int itemId)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userId = userInfo.Id;
 
             var cartItems = await _cartRepository.GetCartItemsByUserId(userId).ConfigureAwait(false);
 
-            var existingCartItem = cartItems.FirstOrDefault(item => item.ItemId == ItemId);
+            var existingCartItem = cartItems.FirstOrDefault(item => item.ItemId == itemId);
             if(existingCartItem == null)
             {
                 throw new Exception("L'action a échoué : l'article n'a pas été trouvé");
@@ -139,6 +139,42 @@ namespace Service.Order
             if (existingCartItem != null)
             {
                 await _cartRepository.DeleteElementAsync(existingCartItem).ConfigureAwait(false);
+                return cartItems.Select(cart => _mapper.Map<CartItem>(cart)).ToList();
+            }
+
+            throw new Exception("L'action a échoué");
+        }
+
+
+        /// Update cart <summary>
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ///
+        public async Task<IEnumerable<CartItem>>  UpdateCart(UpdateCart request)
+        {
+
+            var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
+            int userId = userInfo.Id;
+
+            var cartItems = await _cartRepository.GetCartItemsByUserId(userId).ConfigureAwait(false);
+
+            var item = await _itemRepository.GetByKeys(request.ItemId).ConfigureAwait(false);
+            if (item == null)
+                throw new ArgumentException("L'action a échoué : l'article n'a pas été trouvé");
+
+            var existingCartItem = cartItems.FirstOrDefault(item => item.ItemId == request.ItemId);
+            if (existingCartItem == null)
+            {
+                throw new Exception("L'action a échoué : l'article n'a pas été trouvé");
+            }
+            if (existingCartItem != null)
+            {
+                existingCartItem.Quantity = request.Quantity;
+                existingCartItem.Subtotal = item.Price * request.Quantity;
+                existingCartItem.UpdateDate = DateTime.UtcNow;
+                await _cartRepository.UpdateElementAsync(existingCartItem).ConfigureAwait(false);
 
                 return cartItems.Select(cart => _mapper.Map<CartItem>(cart)).ToList();
             }

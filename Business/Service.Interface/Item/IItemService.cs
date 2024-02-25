@@ -1,4 +1,5 @@
-﻿using Model.Item;
+﻿using Model.DetailsItem;
+using Model.Item;
 
 namespace Service.Interface.Item
 {
@@ -10,5 +11,7 @@ namespace Service.Interface.Item
         Task<string> DeleteItem(int itemId);
         Task<ReadItem> CreateItem(ItemAdd request);
         Task<ReadItem> GetItemDetails(int itemId);
+        Task<ReadItem> AddColorByItem(AddColorByItem request);
+        Task<ReadItem> AddImageByItem(AddImageByItem request);
     }
 }

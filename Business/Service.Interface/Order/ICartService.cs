@@ -9,8 +9,8 @@ namespace Service.Interface.Order
     {
         Task<CartItem> CreateCart(AddCart request);
         Task<IEnumerable<CartItem>> GetCartItemsByUserId();
-        Task<IEnumerable<CartItem>> DeleteItemInTheCart(int ItemId);
-
+        Task<IEnumerable<CartItem>> DeleteItemInTheCart(int id);
+        Task<IEnumerable<CartItem>> UpdateCart(UpdateCart request);
 
         //void CalculateCartTotal(Cart cart);*/
     }
