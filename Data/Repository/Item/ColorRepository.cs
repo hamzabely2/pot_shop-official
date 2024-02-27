@@ -24,9 +24,7 @@ namespace Repository.Item
             Color color = await _table.FirstOrDefaultAsync(x => x.Hex == hex).ConfigureAwait(false);
 
             return color;
+
         }
-
-
-      
     }
 }

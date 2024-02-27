@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Model.DetailsItem;
 using Model.Item;
 using Service.Interface.Item;
+using System.Collections.Generic;
 
 namespace back_end.Controllers
 {
@@ -21,6 +22,28 @@ namespace back_end.Controllers
             _logger = logger;
         }
 
+        /// get item by id <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("filtered")]
+        [ProducesResponseType(typeof(IEnumerable<ReadItem>), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> GetFilteredItems(FilteredItem request)
+        {
+            try
+            {
+                var result = await _itemService.GetFilteredItems(request).ConfigureAwait(false);
+                string message = "article filtre";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
 
 
         /// get list item <summary>
@@ -35,7 +58,7 @@ namespace back_end.Controllers
             try
             {
                 var result = await _itemService.GetListItem().ConfigureAwait(false);
-                _logger.LogInformation("la liste des artciles", result);
+                _logger.LogInformation("La liste des artciles", result);
                 string message = "la liste des artciles";
                 return Ok(new { message, result });
             }
@@ -76,7 +99,7 @@ namespace back_end.Controllers
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> CreateItem(ItemAdd request)
+        public async Task<ActionResult> CreateItem([FromForm] ItemAdd request)
         {
             try
             {
@@ -118,16 +141,16 @@ namespace back_end.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("delete/{itemId}")]
+        [HttpDelete("delete/{id}")]
         [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> DeleteItem(int itemId)
+        public async Task<ActionResult> DeleteItem(int id)
         {
             try
             {
-                var result = await _itemService.DeleteItem(itemId);
+                var result = await _itemService.DeleteItem(id);
                 string message = "article a été supprime avec succès";
                 return Ok(new { message, result });
             }
@@ -139,14 +162,14 @@ namespace back_end.Controllers
 
         /// add image by item <summary>
         /// </summary>
-        /// <param name="itemDto"></param>
+        /// <param name=""></param>
         /// <returns></returns>
         [HttpPost("create/image")]
         [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> AddImageByItem(AddImageByItem request)
+        public async Task<ActionResult> AddImageByItem([FromForm]  AddImageByItem request)
         {
             try
             {
@@ -162,7 +185,7 @@ namespace back_end.Controllers
 
         /// add color by item <summary>
         /// </summary>
-        /// <param name="itemDto"></param>
+        /// <param name=""></param>
         /// <returns></returns>
         [HttpPost("create/color")]
         [Authorize(Roles = RoleString.Admin)]
@@ -175,6 +198,30 @@ namespace back_end.Controllers
             {
                 var result = await _itemService.AddColorByItem(request).ConfigureAwait(false);
                 string message = "La couleur a été ajoutée avec succès";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        /// delete color by item <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete/color")]
+        [Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> DeleteColorByItem(AddColorByItem request)
+        {
+            try
+            {
+                var result = await _itemService.DeleteColorByItem(request);
+                string message = "la couleur a été supprime avec succès";
                 return Ok(new { message, result });
             }
             catch (Exception ex)

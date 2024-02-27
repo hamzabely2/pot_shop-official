@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Model.Item
 {
@@ -26,6 +27,6 @@ namespace Model.Item
         public int MaterialId { get; set; }
 
         [Required(ErrorMessage = "Veuillez insere une image")]
-        public byte[] ImagesData { get; set; }
+        public IFormFile ImagesData { get; set; }
     }
 }

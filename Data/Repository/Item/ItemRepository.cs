@@ -80,7 +80,5 @@ namespace Repository.Item
 
             return colors;
         }
-
-
     }
 }

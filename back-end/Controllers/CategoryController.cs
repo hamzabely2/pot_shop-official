@@ -21,7 +21,6 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("")]
-        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(CategoryDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]

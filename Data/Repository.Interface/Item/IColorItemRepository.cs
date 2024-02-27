@@ -9,5 +9,8 @@ namespace Repository.Interface.Item
 {
     public interface IColorItemRepository : IGenericRepository<ColorItem>
     {
+        Task<ColorItem> GetColorByItemIdAndColorId(int itemId, int colorId);
+        Task DeleteColorByItemIdAndColorId(int itemId, int colorId);
+
     }
 }

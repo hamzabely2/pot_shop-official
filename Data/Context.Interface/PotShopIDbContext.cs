@@ -10,7 +10,6 @@ namespace Context.Interface
         DbSet<Category> Categories { get; set; }
         DbSet<Color> Colors { get; set; }
         DbSet<ColorItem> ColorsItems { get; set; }
-        DbSet<Comment> Comments { get; set; }
         DbSet<Image> Images { get; set; }
         DbSet<Item> Items { get; set; }
         DbSet<Material> Materials { get; set; }

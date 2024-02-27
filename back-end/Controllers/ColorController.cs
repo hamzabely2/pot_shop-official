@@ -7,7 +7,6 @@ using Service.Interface.Item;
 
 namespace back_end.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
 
@@ -25,7 +24,6 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("")]
-        [Authorize(Roles = RoleString.Admin)]
         [ProducesResponseType(typeof(ColorDto), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]

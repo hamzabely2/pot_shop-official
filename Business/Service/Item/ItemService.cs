@@ -3,6 +3,7 @@ using Context.Interface;
 using Entity.Model;
 using Model.DetailsItem;
 using Model.Item;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Interface.Item;
 using Service.Interface.Item;
 using System.Drawing;
@@ -36,6 +37,56 @@ namespace Service.Item
             _colorItemRepository = colorItemRepository;
         }
 
+
+        /// <summary>
+        /// get item filtred
+        /// </summary>
+        /// <param name="colors"></param>
+        /// <param name="categories"></param>
+        /// <param name="materials"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+
+        public async Task<List<ReadItem>> GetFilteredItems(FilteredItem request)
+        {
+            var items = await _itemRepository.GetAllAsync().ConfigureAwait(false);
+
+            if (items == null)
+            {
+                throw new ArgumentException("Aucun article trouvé.");
+            }
+
+            var filteredItems = new List<Entity.Model.Item>();
+            foreach (var item in items)
+            {
+                var itemDetails = await GetItemDetails(item.Id).ConfigureAwait(false);
+
+                var matchColor = !request.colors.Any() || (itemDetails.Colors != null && itemDetails.Colors.Any(ci => request.colors.Contains(ci.Label)));
+                var matchCategory = !request.categories.Any() || (itemDetails.Categories != null && request.categories.Contains(itemDetails.Categories.Label));
+                var matchMaterial = !request.materials.Any() || (itemDetails.Materials != null && request.materials.Contains(itemDetails.Materials.Label));
+
+                if (matchColor || matchCategory || matchMaterial)
+                {
+                    filteredItems.Add(item);
+                }
+            }
+
+            var filteredItemDtos = new List<ReadItem>();
+
+            foreach (var item in filteredItems)
+            {
+                var readItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+                filteredItemDtos.Add(readItem);
+            }
+
+            return filteredItemDtos;
+        }
+
+
+
+
+
+
         /// Get item by id <summary>
         /// </summary>
         /// <param name="id"></param>
@@ -49,13 +100,8 @@ namespace Service.Item
             {
                 throw new ArgumentException("L'articles n'a pas ete trouve non trouvé.");
             }
-            var images = await _itemRepository.GetAllImagesForItem(itemId).ConfigureAwait(false);
 
-            if (images.Any())
-            {
-                item.Images.AddRange(images);
-            }
-            var readItem = _mapper.Map<ReadItem>(item);
+            var readItem = await GetItemDetails(item.Id).ConfigureAwait(false);
 
             return readItem;
         }
@@ -110,7 +156,7 @@ namespace Service.Item
 
             if (request.ImagesData != null)
             {
-                //await request.ImagesData.OpenReadStream().CopyToAsync(memoryStream);
+                await request.ImagesData.OpenReadStream().CopyToAsync(memoryStream);
             }
 
 
@@ -120,7 +166,7 @@ namespace Service.Item
             await _itemRepository.CreateElementAsync(newItem).ConfigureAwait(false);
 
             var image = new Image { ItemId = newItem.Id, ImageData = memoryStream.ToArray() };
-
+             
             var color = new ColorItem { ItemId = newItem.Id, ColorId = request.ColorId };
 
             await _imageRepository.CreateElementAsync(image).ConfigureAwait(false);
@@ -160,7 +206,7 @@ namespace Service.Item
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<string> DeleteItem(int itemId)
+        public async Task<ReadItem> DeleteItem(int itemId)
         {
             var existingItem = await _itemRepository.GetByKeys(itemId).ConfigureAwait(false);
 
@@ -176,7 +222,7 @@ namespace Service.Item
 
             if (item == null)
             {
-                return "artciles supprime avec succès et les images associées et ses coleaur";
+                return _mapper.Map<ReadItem>(existingItem);
             }
             else
             {
@@ -219,6 +265,8 @@ namespace Service.Item
         /// <exception cref="ArgumentException"></exception>
         public async Task<ReadItem> AddImageByItem(AddImageByItem request)
         {
+            var memoryStream = new MemoryStream();
+
             var item = await _itemRepository.GetItemByIdWithDetails(request.ItemId).ConfigureAwait(false);
 
             if (item == null)
@@ -226,13 +274,18 @@ namespace Service.Item
                 throw new ArgumentException("L'article n'a pas été trouvé.");
             }
 
-            var image = new Image { ItemId = item.Id, ImageData = request.ImageData };
+            if (request.ImageData != null)
+            {
+                await request.ImageData.OpenReadStream().CopyToAsync(memoryStream);
+            }
+
+            var image = new Image { ItemId = item.Id, ImageData = memoryStream.ToArray()};
 
              await _imageRepository.CreateElementAsync(image).ConfigureAwait(false);
 
-            var createdItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+            var exiteItem = await GetItemDetails(item.Id).ConfigureAwait(false);
 
-            return createdItem;
+            return exiteItem;
 
         }
 
@@ -251,12 +304,43 @@ namespace Service.Item
                 throw new ArgumentException("L'article n'a pas été trouvé.");
             }
 
+            var existingColor = await _colorItemRepository.GetColorByItemIdAndColorId(item.Id, request.ColorId).ConfigureAwait(false);
+
+            if (existingColor != null)
+            {
+                throw new ArgumentException("La couleur spécifiée est déjà associée à cet article.");
+            }
+
             var color = new ColorItem { ItemId = item.Id, ColorId = request.ColorId };
 
             await _colorItemRepository.CreateElementAsync(color).ConfigureAwait(false);
-            var createdItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+            var exiteItem = await GetItemDetails(item.Id).ConfigureAwait(false);
 
-            return createdItem;
-        }   
+            return exiteItem;
+        }
+
+        /// <summary>
+        /// delete color by item
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<ReadItem> DeleteColorByItem(AddColorByItem request)
+        {
+            var item = await _itemRepository.GetItemByIdWithDetails(request.ItemId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException("L'article n'a pas été trouvé.");
+            }
+
+
+            await _colorItemRepository.DeleteColorByItemIdAndColorId(item.Id, request.ColorId).ConfigureAwait(false);
+
+            var exiteItem = await GetItemDetails(item.Id).ConfigureAwait(false);
+
+            return exiteItem;
+        }
+
     }
 }
