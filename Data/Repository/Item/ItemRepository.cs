@@ -48,16 +48,16 @@ namespace Repository.Item
             return item;
         }
 
-        public async Task<List<byte[]>> GetAllImagesForItem(int itemId)
+        public async Task<List<Image>> GetAllImagesForItem(int itemId)
         {
-            var imagesData = await _idbcontext
-                .Images.Where(img => img.ItemId == itemId)
-                .Select(img => img.ImageData)
+            var images = await _idbcontext.Images
+                .Where(img => img.ItemId == itemId)
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            return imagesData;
+            return images;
         }
+
 
         public async Task<List<Color>> GetAllColorsForItem(int itemId)
         {

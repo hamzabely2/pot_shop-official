@@ -146,16 +146,16 @@ namespace Service.Item
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<List<MaterialDto>> GetAllMaterial()
+        public async Task<List<ReadMaterial>> GetAllMaterial()
         {
             var materials = await _materialRepository.GetAllAsync().ConfigureAwait(false);
             if (materials == null)
                 throw new ArgumentException("L'action a échoué");
 
-            List<MaterialDto> materialList = new();
+            List<ReadMaterial> materialList = new();
             foreach (Material material in materials)
             {
-                materialList.Add(_mapper.Map<MaterialDto>(material));
+                materialList.Add(_mapper.Map<ReadMaterial>(material));
             }
             return materialList;
         }
@@ -165,7 +165,7 @@ namespace Service.Item
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<MaterialDto> CreateMaterial(MaterialDto request)
+        public async Task<ReadMaterial> CreateMaterial(ReadMaterial request)
         {
             Material material = _mapper.Map<Material>(request);
             var LabelExiste = await _materialRepository.GetMaterialByName(request.Label);
@@ -175,7 +175,7 @@ namespace Service.Item
             var materialCreated = await _materialRepository
                 .CreateElementAsync(material)
                 .ConfigureAwait(false);
-            return _mapper.Map<MaterialDto>(materialCreated);
+            return _mapper.Map<ReadMaterial>(materialCreated);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Service.Item
         /// <param name="materilId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<MaterialDto> DeleteMaterial(int materilId)
+        public async Task<ReadMaterial> DeleteMaterial(int materilId)
         {
             var material = await _materialRepository.GetByKeys(materilId).ConfigureAwait(false);
             if (material == null)
@@ -193,7 +193,7 @@ namespace Service.Item
             var materialDelete = await _materialRepository
                 .DeleteElementAsync(material)
                 .ConfigureAwait(false);
-            return _mapper.Map<MaterialDto>(materialDelete);
+            return _mapper.Map<ReadMaterial>(materialDelete);
         }
     }
 }

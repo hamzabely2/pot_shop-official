@@ -122,8 +122,8 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("update")]
-        [Authorize(Roles = RoleString.User)]
-        [ProducesResponseType(typeof(UserRead), 200)]
+        [Authorize(Roles = RoleString.User + "," + RoleString.Admin)]
+        [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> UpdateUser(UserUpdate request)

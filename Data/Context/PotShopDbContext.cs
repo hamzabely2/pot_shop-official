@@ -61,10 +61,10 @@ namespace Context
               new Material { Id = 6, Label = "Argile grès", Description = "Le grès est une argile haute température : sa température de cuisson doit être supérieure à 1200°C. Imperméable, résistante au gel et aux éraflures et disposant d'une très grande dureté, la terre de grès pour poterie est idéale pour la céramique utilitaire et extérieure." }
           );
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql("server=localhost;database=potshop;uid=root", ServerVersion.Parse("5.7.36-mysql"));
-        }
+        }*/
 
     }
 }

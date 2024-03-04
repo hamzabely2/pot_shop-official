@@ -47,7 +47,7 @@ namespace Mapper.Adress
             CreateMap<CategoryDto, Category>();
             CreateMap<Category, CategoryDto>();
             CreateMap<Color, ColorDto>();
-            CreateMap<Material, MaterialDto>();
+            CreateMap<Material, ReadMaterial>();
 
 
             CreateMap<ItemAdd, Entity.Model.Item>();

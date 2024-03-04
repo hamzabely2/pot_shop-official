@@ -82,7 +82,7 @@ namespace Test.Integration
             // Assert
             response.EnsureSuccessStatusCode();
 
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<MaterialDto>>>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<ReadMaterial>>>();
 
             // Vérifiez que la réponse contient la propriété "message" et la propriété "result"
             Assert.NotNull(apiResponse.Message);
@@ -94,7 +94,7 @@ namespace Test.Integration
         public async Task CreateMaterial_ReturnMaterial()
         {
 
-            var newMaterial = new MaterialDto { Label = "material_test" };
+            var newMaterial = new ReadMaterial { Label = "material_test",Description="description material_test"};
             var newMaterialJson = new StringContent(JsonSerializer.Serialize(newMaterial), Encoding.UTF8, "application/json");
 
             var adminUser = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
@@ -111,7 +111,7 @@ namespace Test.Integration
 
             response.EnsureSuccessStatusCode();
 
-            var createdMaterial = await response.Content.ReadFromJsonAsync<MaterialDto>();
+            var createdMaterial = await response.Content.ReadFromJsonAsync<ReadMaterial>();
             Assert.NotNull(createdMaterial);
         }
 

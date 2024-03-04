@@ -24,6 +24,7 @@ namespace Mapper.User
                 LastName = request.LastName,
                 PasswordHash = passwordHash,
                 CreatedDate = DateTime.Now,
+                Deactivated = false,
                 UpdateDate = DateTime.Now,
             };
         }
@@ -35,6 +36,8 @@ namespace Mapper.User
             uniteGet.LastName = request.LastName;
             uniteGet.PhoneNumber = request.PhoneNumber;
             uniteGet.UpdateDate = DateTime.Now;
+            uniteGet.ImageId = request.ImageId;
+            uniteGet.Deactivated = request.Deactivated;
 
             return uniteGet;
         }

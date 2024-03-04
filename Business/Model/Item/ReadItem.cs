@@ -18,9 +18,12 @@ namespace Model.Item
         public string Description { get; set; } = null!;
         public CategoryDto Categories { get; set; }
         public List<ColorDto> Colors { get; set; }= new List<ColorDto>();
-        public MaterialDto Materials { get; set; }
-        public List<byte[]> Images { get; set; } = new List<byte[]>();
+        public ReadMaterial Materials { get; set; }
+        public List<Image> Images { get; set; } = new List<Image>();
         public DateTime? CreatedDate { get; set; }
+        public string Height { get; set; }
+        public string Width { get; set; }
+        public float Weight { get; set; }
 
     }
 }

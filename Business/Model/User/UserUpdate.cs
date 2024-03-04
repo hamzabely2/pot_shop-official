@@ -14,5 +14,13 @@ namespace Model.User
         public string? Email { get; set; }
 
         public string? PhoneNumber { get; set; }
+
+        public int? ImageId { get; set; }
+
+        public bool Deactivated { get; set; }
+
+        public int Id { get; set; }
+
+
     }
 }

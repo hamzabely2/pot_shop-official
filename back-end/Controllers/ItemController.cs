@@ -22,7 +22,7 @@ namespace back_end.Controllers
             _logger = logger;
         }
 
-        /// get item by id <summary>
+        /// get item <summary>
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -175,6 +175,29 @@ namespace back_end.Controllers
             {
                 var result = await _itemService.AddImageByItem(request).ConfigureAwait(false);
                 string message = "L'image a été ajoutée avec succès";
+                return Ok(new { message, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// delete image by item <summary>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("delete/image")]
+        [Authorize(Roles = RoleString.Admin)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
+        [ProducesResponseType(typeof(StatusCodeResult), 500)]
+        [ProducesResponseType(typeof(StatusCodeResult), 400)]
+        public async Task<ActionResult> DeleteColorByItem(DeleteImageByItem request)
+        {
+            try
+            {
+                var result = await _itemService.DeleteImageByItem(request);
+                string message = "la couleur a été supprime avec succès";
                 return Ok(new { message, result });
             }
             catch (Exception ex)

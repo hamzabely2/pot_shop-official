@@ -26,8 +26,8 @@ namespace Service.Interface.Item
         /// <summary>
         /// crud for material
         /// </summary>
-        Task<List<MaterialDto>> GetAllMaterial();
-        Task<MaterialDto> CreateMaterial(MaterialDto request);
-        Task<MaterialDto> DeleteMaterial(int materilId);
+        Task<List<ReadMaterial>> GetAllMaterial();
+        Task<ReadMaterial> CreateMaterial(ReadMaterial request);
+        Task<ReadMaterial> DeleteMaterial(int materilId);
     }
 }

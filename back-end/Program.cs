@@ -73,6 +73,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSetting"));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -90,3 +93,6 @@ app.UseCors("TestPolicy");
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
+

@@ -144,6 +144,12 @@ namespace Service.User
             {
                 throw new ArgumentException($"La connexion a échoué : e-mail ou mot de passe incorrect.");
             }
+
+            if(user.Deactivated == true)
+            {
+                throw new ArgumentException("Votre compte est actuellement désactivé ou indisponible pour le moment. Pour plus d'informations, contactez le service client");
+            }
+           
             var role = _roleRepository.GetRole(user.Id); ;
             var claims = new List<Claim>
                 {
@@ -175,31 +181,51 @@ namespace Service.User
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<UserRead> UpdateUser(UserUpdate request)
+        public async Task<Entity.Model.User> UpdateUser(UserUpdate request)
         {
             var userInfo = _connectionService.GetCurrentUserInfo(_httpContextAccessor);
             int userConnectedId = userInfo.Id;
-            var userToUpdate = await _userRepository.GetByKeys(userConnectedId);
+            string roleUser = userInfo.Role;
+
+            Entity.Model.User userToUpdate;
+
+
+            if (roleUser == RoleString.Admin)
+            {
+                userToUpdate = await _userRepository.GetByKeys(request.Id);
+            }
+            else
+            {
+                userToUpdate = await _userRepository.GetByKeys(userConnectedId);
+
+            }
+
+
             if (userToUpdate == null)
-                throw new ArgumentException("L'action a échoué : l'ulisateur n'a pas été trouvée");
+                throw new ArgumentException("L'action a échoué : l'utilisateur n'a pas été trouvé");
 
-            var userExistsUserName = await _userRepository.GetUserByName(request.FirstName);
-            if (userExistsUserName != null)
-                throw new ArgumentException("L'action a échoué :le nom existe déjà");
+            if (request.FirstName != userToUpdate.FirstName)
+            {
+                var userExistsUserName = await _userRepository.GetUserByName(request.FirstName);
+                if (userExistsUserName != null)
+                    throw new ArgumentException("L'action a échoué : le nom existe déjà");
+            }
 
-            var userExistsEmail = await _userRepository.GetUserByEmail(request.Email);
-            if (userExistsEmail != null)
-                throw new ArgumentException("L'action a échoué :l'email existe déjà");
+            if (request.Email != userToUpdate.Email)
+            {
+                var userExistsEmail = await _userRepository.GetUserByEmail(request.Email);
+                if (userExistsEmail != null)
+                    throw new ArgumentException("L'action a échoué : l'email existe déjà");
+            }
 
             var user = UserMapper.TransformDtoUpdate(request, userToUpdate);
-
             var userUpdate = await _userRepository.UpdateElementAsync(user).ConfigureAwait(false);
             if (userUpdate == null)
                 throw new ArgumentException("L'action a échoué : la modification des données utilisateur a échoué");
-            var resultUserUpdate = UserMapper.TransformDtoExit(userUpdate);
 
-            return resultUserUpdate;
+            return userUpdate;
         }
+
 
         /// Update password to user <summary>
         /// </summary>

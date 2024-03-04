@@ -15,5 +15,6 @@ namespace Service.Interface.Item
         Task<ReadItem> AddImageByItem(AddImageByItem request);
         Task<ReadItem> DeleteColorByItem(AddColorByItem request);
         Task<List<ReadItem>> GetFilteredItems(FilteredItem request);
+        Task<ReadItem> DeleteImageByItem(DeleteImageByItem request);
     }
 }

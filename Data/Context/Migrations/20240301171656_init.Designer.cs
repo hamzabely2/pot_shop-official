@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(PotShopDbContext))]
-    [Migration("20240221160140_init")]
+    [Migration("20240301171656_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,39 +195,6 @@ namespace Context.Migrations
                     b.ToTable("ColorsItems");
                 });
 
-            modelBuilder.Entity("Entity.Model.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Item_Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Comments");
-                });
-
             modelBuilder.Entity("Entity.Model.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -261,6 +228,10 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Height")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
 
@@ -276,6 +247,13 @@ namespace Context.Migrations
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Width")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -458,6 +436,9 @@ namespace Context.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("Deactivated")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -465,6 +446,9 @@ namespace Context.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -528,13 +512,6 @@ namespace Context.Migrations
                     b.Navigation("Color");
 
                     b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("Entity.Model.Comment", b =>
-                {
-                    b.HasOne("Entity.Model.User", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Entity.Model.Item", b =>
@@ -625,8 +602,6 @@ namespace Context.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Comments");
 
                     b.Navigation("Roles_Users");
                 });

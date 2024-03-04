@@ -28,5 +28,14 @@ namespace Model.Item
 
         [Required(ErrorMessage = "Veuillez insere une image")]
         public IFormFile ImagesData { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer la hauteur")]
+        public string Height { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer la largeur")]
+        public string Width { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer le poids")]
+        public float Weight { get; set; }
     }
 }

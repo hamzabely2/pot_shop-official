@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
+
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Repository.Interface.Item;
 using Test.Common;
 
-namespace Api.Test.Unit
+namespace Api.Unit
 {
     public class CategoryTest : TestBase
     {

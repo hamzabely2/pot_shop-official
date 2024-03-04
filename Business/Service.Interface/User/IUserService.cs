@@ -9,7 +9,7 @@ namespace Service.Interface.User
         Task<Entity.Model.User> GetUserByName();
         Task<string> Register(UserRegister request);
         Task<string> Login(UserLogin request);
-        Task<UserRead> UpdateUser(UserUpdate request);
+        Task<Entity.Model.User> UpdateUser(UserUpdate request);
         Task<UserRead> UpdatePasswordUser(UserPassword request);
         Task<UserRead> DeleteUser();
 

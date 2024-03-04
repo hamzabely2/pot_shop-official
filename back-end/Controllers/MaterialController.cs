@@ -22,7 +22,7 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("")]
-        [ProducesResponseType(typeof(MaterialDto), 200)]
+        [ProducesResponseType(typeof(ReadMaterial), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetAllMaterial()
@@ -47,10 +47,10 @@ namespace back_end.Controllers
         /// <returns></returns>
         [HttpPost("create")]
         [Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(MaterialDto), 200)]
+        [ProducesResponseType(typeof(ReadMaterial), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
-        public async Task<ActionResult> CreateMaterial(MaterialDto request)
+        public async Task<ActionResult> CreateMaterial(ReadMaterial request)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace back_end.Controllers
         /// <returns></returns>
         [HttpDelete("delete/{materilId}")]
         [Authorize(Roles = RoleString.Admin)]
-        [ProducesResponseType(typeof(MaterialDto), 200)]
+        [ProducesResponseType(typeof(ReadMaterial), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> DeleteMaterial(int materilId)

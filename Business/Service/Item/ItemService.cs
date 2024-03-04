@@ -246,6 +246,12 @@ namespace Service.Item
             }
 
             var images = await _itemRepository.GetAllImagesForItem(itemId).ConfigureAwait(false);
+
+            if (item.Images == null)
+            {
+                item.Images = new List<Image>();
+            }
+
             item.Images.AddRange(images);
 
             var colors = await _itemRepository.GetAllColorsForItem(itemId).ConfigureAwait(false);
@@ -256,6 +262,8 @@ namespace Service.Item
 
             return readItem;
         }
+
+
 
         /// <summary>
         /// add image by item
@@ -288,6 +296,38 @@ namespace Service.Item
             return exiteItem;
 
         }
+
+        /// <summary>
+        /// delete image by item
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task<ReadItem> DeleteImageByItem(DeleteImageByItem request)
+        {
+            var image = await _imageRepository.GetByKeys(request.ImageId).ConfigureAwait(false);
+
+            if (image == null)
+            {
+                throw new Exception("L'image n'a pas été trouvé.");
+            }
+
+            await _imageRepository.DeleteElementAsync(image).ConfigureAwait(false);
+
+            var item = await _itemRepository.GetByKeys(request.ItemId).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new Exception("L'article n'a pas été trouvé.");
+            }
+
+            var updatedItemDetails = await GetItemDetails(item.Id).ConfigureAwait(false);
+
+            return updatedItemDetails;
+        }
+
+
+
 
         /// <summary>
         /// add color by item
