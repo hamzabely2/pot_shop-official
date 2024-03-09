@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Business\Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Unit", "Test\Test.Unit\Test.Unit.csproj", "{B3C78BAF-FE00-4868-A889-FC8532A1A9FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Integration", "Test\Test.Integration\Test.Integration.csproj", "{FA4BF207-E484-4E5C-B276-C12D6DB07164}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Integration", "Test\Test.Integration\Test.Integration.csproj", "{FA4BF207-E484-4E5C-B276-C12D6DB07164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

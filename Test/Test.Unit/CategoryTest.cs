@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Repository.Interface.Item;
 using Test.Common;
 
-namespace Api.Unit
+namespace Api.Test.Unit
 {
     public class CategoryTest : TestBase
     {

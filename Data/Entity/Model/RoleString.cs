@@ -6,6 +6,5 @@
 
         public const string User = "User";
 
-        public const string SuperAdmin = "SuperAdmin";
     }
 }

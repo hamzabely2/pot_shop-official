@@ -28,9 +28,9 @@ namespace Context
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<RoleUser> UsersRoles { get; set; } = null!;
+        public virtual DbSet<CreatePot> CreatesPots { get; set; } = null!;
 
-
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -50,9 +50,8 @@ namespace Context
 
             modelBuilder.Entity<Role>().HasData(
               new Role { Id = 1, Name = "User" },
-              new Role { Id = 2, Name = "Admin" },
-              new Role { Id = 3, Name = "SuperAdmin" }
-           );
+              new Role { Id = 2, Name = "Admin" }
+            );
 
             modelBuilder.Entity<Material>().HasData(
               new Material { Id = 1, Label = "Argile rouge", Description = "L’argile rouge de type illite est une argile très absorbante et adsorbante. Sa couleur apportée par sa richesse en oxyde de fer lui confère des propriétés matifiante, révélatrice de bonne mine mais aussi circulatoire et décongestionnante. Elle sera idéale pour les peaux couperosées et sujettes aux rougeurs. En masque, l'argile rouge ravive les peaux ternes et redonne force et éclat à une chevelure foncée. Pour des utilisations en argilothérapie, on se limitera à un usage par voie externe en cataplasme. Nom INCI : Illite et Kaolin. Origine : France." },
@@ -61,10 +60,10 @@ namespace Context
               new Material { Id = 6, Label = "Argile grès", Description = "Le grès est une argile haute température : sa température de cuisson doit être supérieure à 1200°C. Imperméable, résistante au gel et aux éraflures et disposant d'une très grande dureté, la terre de grès pour poterie est idéale pour la céramique utilitaire et extérieure." }
           );
         }
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql("server=localhost;database=potshop;uid=root", ServerVersion.Parse("5.7.36-mysql"));
-        }*/
+        }
 
     }
 }

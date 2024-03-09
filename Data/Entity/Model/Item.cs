@@ -12,8 +12,8 @@ namespace Entity.Model
             public string Name { get; set; }
             public float Price { get; set; }
             public int Stock { get; set; }
-            public string Height { get; set; }
-            public string Width { get; set; }
+            public float Height { get; set; }
+            public float Width { get; set; }
             public float Weight { get; set; }
             public string Description { get; set; }
             public DateTime CreatedDate { get; set; } 

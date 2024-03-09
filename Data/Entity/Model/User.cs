@@ -16,7 +16,6 @@ namespace Entity.Model
         public virtual ICollection<Address> Addresses { get; set; }
         public virtual ICollection<RoleUser> Roles_Users { get; set; }
         public DateTime CreatedDate { get; set; }
-
         public DateTime UpdateDate { get; set; }
         public virtual ICollection<Cart> Cart { get; set; }
 

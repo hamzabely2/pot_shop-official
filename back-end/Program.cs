@@ -64,12 +64,22 @@ builder
     });
 
 builder.Services.AddCors(options =>
+{
     options.AddPolicy(
-        "TestPolicy",
+        "ReactPolicy",
         policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()
-    )
-);
+    );
+    // Ajouter une autre politique si nécessaire
+    options.AddPolicy(
+        "ChromPolicy",
+        policy => policy.WithOrigins("http://localhost:2000").AllowAnyHeader().AllowAnyMethod()
+    );
 
+    options.AddPolicy(
+        "MobilePolicy",
+        policy => policy.WithOrigins("http://localhost:64230").AllowAnyHeader().AllowAnyMethod()
+    );
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -89,7 +99,9 @@ app.UseCookiePolicy();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("TestPolicy");
+app.UseCors("ReactPolicy");
+app.UseCors("MobilePolicy");
+app.UseCors("ChromPolicy");
 app.MapControllers();
 
 app.Run();

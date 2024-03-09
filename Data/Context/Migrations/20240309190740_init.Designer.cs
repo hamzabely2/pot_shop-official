@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(PotShopDbContext))]
-    [Migration("20240301171656_init")]
+    [Migration("20240309190740_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,6 +195,23 @@ namespace Context.Migrations
                     b.ToTable("ColorsItems");
                 });
 
+            modelBuilder.Entity("Entity.Model.CreatePot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("longblob");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CreatesPots");
+                });
+
             modelBuilder.Entity("Entity.Model.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -228,9 +245,8 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Height")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<float>("Height")
+                        .HasColumnType("float");
 
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
@@ -251,9 +267,8 @@ namespace Context.Migrations
                     b.Property<float>("Weight")
                         .HasColumnType("float");
 
-                    b.Property<string>("Width")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<float>("Width")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -311,16 +326,34 @@ namespace Context.Migrations
 
             modelBuilder.Entity("Entity.Model.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("BillingAddress")
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("Code")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
@@ -330,7 +363,14 @@ namespace Context.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ShippingAddress")
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -340,10 +380,7 @@ namespace Context.Migrations
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -357,7 +394,7 @@ namespace Context.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int?>("OrderUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -370,7 +407,7 @@ namespace Context.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderUserId");
 
                     b.ToTable("OrderItems");
                 });
@@ -398,11 +435,6 @@ namespace Context.Migrations
                         {
                             Id = 2,
                             Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "SuperAdmin"
                         });
                 });
 
@@ -543,7 +575,7 @@ namespace Context.Migrations
 
                     b.HasOne("Entity.Model.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderUserId");
 
                     b.Navigation("Item");
                 });

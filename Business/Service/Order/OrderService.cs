@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Model.Order;
 using Repository.Interface.Item;
 using Repository.Interface.Order;
+using Repository.Interface.User;
 using Service.Interface.Order;
 using Service.Interface.User;
 
@@ -15,6 +16,7 @@ namespace Service.Order
         private readonly ICartRepository _cartRepository;
         private readonly PotShopIDbContext _table;
         private readonly ItemIRepository _itemRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IConnectionService _connectionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
@@ -23,8 +25,9 @@ namespace Service.Order
         public OrderService(
             IMapper mapper,
             PotShopIDbContext _idbcontext,
-            ICartRepository cartRepository,
+            ICartRepository cartRepository, 
             ItemIRepository itemRepository,
+            IAddressRepository addressRepository,
             IConnectionService connectionService,
             IHttpContextAccessor httpContextAccessor,
             IOrderRepository orderRepository
@@ -37,6 +40,7 @@ namespace Service.Order
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _orderRepository = orderRepository;
+            _addressRepository = addressRepository;
         }
 
         /// <summary>
@@ -65,12 +69,17 @@ namespace Service.Order
                 throw new Exception("L'action a échoué : aucune produits est contenu dans le panier.");
             }
 
+
+            Address adreessuser =  await _addressRepository.GetByKeys(request.AddressId).ConfigureAwait(false);
             var orderEntity = new Entity.Model.Order
             {
-                UserId = userId,
+
+
                 TotalAmount = CalculateTotalAmount(orderItems),
-                ShippingAddress = request.ShippingAddress,
-                BillingAddress = request.BillingAddress,
+                State = adreessuser.State,
+                Street = adreessuser.Street,
+                City = adreessuser.City,
+                Code = adreessuser.Code,
                 PaymentMethod = request.PaymentMethod,
                 OrderStatus = "En attente",
                 CreatedDate = DateTime.UtcNow,
@@ -95,7 +104,7 @@ namespace Service.Order
         }
 
         /// <summary>
-        /// fget order by user
+        /// get order by user
         /// </summary>
         /// <returns></returns>
         public async Task<List<ReadOrder>> GetOrdersByUserId()

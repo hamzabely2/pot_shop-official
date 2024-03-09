@@ -18,6 +18,7 @@ namespace Context.Interface
         DbSet<Role> Roles { get; set; }
         DbSet<User> Users { get; set; }
         DbSet<RoleUser> UsersRoles { get; set; }
+        DbSet<CreatePot> CreatesPots { get; set; }
 
     }
 }
