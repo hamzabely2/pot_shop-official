@@ -37,7 +37,8 @@ jobs:
         uses: actions/upload-artifact@master
         with:
            name: Depcheck report
-           path: ${{github.workspace}}/reports
+           path: ${{github.workspace}}/pot_shop_official-back-end/reports
+
   test:
     env:
       BUILD_CONFIG: 'Release'
