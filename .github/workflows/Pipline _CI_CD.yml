@@ -11,62 +11,37 @@ on:
       - develop
       
 jobs:
-  depchecktest:
+name: Dependency Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  depcheck:
     runs-on: ubuntu-latest
-    name: depecheck_test
+    name: Dependency Check
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          path: 'pot_shop_official-back-end' # Assuming this is the correct directory for your Maven project
-      - name: Build project with Maven
-        working-directory: pot_shop_official-back-end # Set the working directory to the project directory
-        run: mvn clean install
-      - name: Depcheck
-        uses: dependency-check/Dependency-Check_Action@main
-        id: Depcheck
-        with:
-          project: 'test'
-          path: 'pot_shop_official-back-end' # Specify the project directory for Depcheck as well
-          format: 'HTML'
-          out: 'reports' # this is the default, no need to specify unless you wish to override it
-          args: >
-            --failOnCVSS 7
-            --enableRetired
-      - name: Upload Test results
-        uses: actions/upload-artifact@master
-        with:
-           name: Depcheck report
-           path: ${{github.workspace}}/pot_shop_official-back-end/reports
-
-  test:
-    env:
-      BUILD_CONFIG: 'Release'
-      SOLUTION: 'Solution1/UnitTest.sln'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: '6.x' # Assurez-vous de spécifier la bonne version de .NET
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Install Dependency-Check global tool
+        run: dotnet tool install --global dotnet-dependency-check
 
-      - name: Test
-        run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
+      - name: Run Dependency-Check
+        run: dotnet dependency-check analyze --project .
 
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
+      - name: Upload Dependency-Check results
+        uses: actions/upload-artifact@v2
         with:
-          name: DotNET Tests
-          path: "**/test-results.trx"                            
-          reporter: dotnet-trx
-          fail-on-error: true          
+          name: dependency-check-report
+          path: dependency-check-report.html
   sonarcloud:
     name: buld and sonarcloud
     runs-on: windows-latest
