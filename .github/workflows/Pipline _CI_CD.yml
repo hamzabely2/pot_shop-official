@@ -54,15 +54,15 @@ jobs:
       - name: Test
         run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
 
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: DotNET Tests
-          path: "**/test-results.trx"
-          reporter: dotnet-trx
-          fail-on-error: true
-          github-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
+ #     - name: Test Report
+      #  uses: dorny/test-reporter@v1
+     #   if: always()
+     #   with:
+      #    name: DotNET Tests
+      #    path: "**/test-results.trx"
+      #    reporter: dotnet-trx
+       #   fail-on-error: true
+       #   github-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
     
   sonarcloud:
     name: buld and sonarcloud
