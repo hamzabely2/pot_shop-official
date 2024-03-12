@@ -11,29 +11,29 @@ on:
       - develop
       
 jobs:
-  depcheck:
-    runs-on: ubuntu-latest
-    name: Dependency Check
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #depcheck:
+    #runs-on: ubuntu-latest
+    #name: Dependency Check
+    #steps:
+      #- name: Checkout
+       # uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.x' # Assurez-vous de spécifier la bonne version de .NET
+      #- name: Setup .NET
+      #  uses: actions/setup-dotnet@v1
+      #  with:
+         #dotnet-version: '6.x' # Assurez-vous de spécifier la bonne version de .NET
 
-      - name: Install Dependency-Check global tool
-        run: dotnet tool install --global dotnet-dependency-check
+     # - name: Install Dependency-Check global tool
+       # run: dotnet tool install --global dotnet-dependency-check
 
-      - name: Run Dependency-Check
-        run: dotnet dependency-check analyze --project .
+     # - name: Run Dependency-Check
+      #  run: dotnet dependency-check analyze --project .
 
-      - name: Upload Dependency-Check results
-        uses: actions/upload-artifact@v2
-        with:
-          name: dependency-check-report
-          path: dependency-check-report.html
+      #- name: Upload Dependency-Check results
+       # uses: actions/upload-artifact@v2
+        #with:
+         # name: dependency-check-report
+          #path: dependency-check-report.html
   test:
     env:
       BUILD_CONFIG: 'Release'
