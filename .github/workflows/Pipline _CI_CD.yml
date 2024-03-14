@@ -1,4 +1,4 @@
-name: CI/CD
+name: Pipline _CI_CD
 
 on:
   push:
@@ -107,11 +107,41 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   build-and-deploy:
-    runs-on: self-hosted
-    needs: [test,sonarcloud]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-    
-    steps:
-        - name: Pull Data from main branch
-          uses: actions/checkout@v2
-  
+        runs-on: self-hosted
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        steps:
+          - name: Pull Data from main branch
+            uses: actions/checkout@v2
+      
+          - name: Build Docker images
+            run: |
+              docker build -t pot_shop_official_back_end .
+      
+          - name: Save Docker image to a tar file
+            run: |
+              docker save -o pot_shop_official_back_end.tar pot_shop_official_front_end
+      
+          ###################
+          - name: Transfer Docker image to remote machine
+            run: |
+              sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no pot_shop_official_back_end.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/back/
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+              SSHPASS: ${{ secrets.PASSWORD }}
+          ###################
+          - name: load Docker image
+            run: |
+              echo "${{ secrets.PASSWORD }}" | sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo -S docker load -i pot_shop_official_back_end.tar'
+            env:
+              SSHPASS: ${{ secrets.PASSWORD }}
+           ###################
+          - name: Start Docker Container
+            run: |
+              sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'docker-compose -f docker-compose.yml up -d'
+          ###################
+          - name: Remove Docker Images
+            run: |
+             sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo docker image prune -a -f'
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+              SSHPASS: ${{ secrets.PASSWORD }}
