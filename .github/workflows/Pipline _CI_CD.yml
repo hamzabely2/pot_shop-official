@@ -107,7 +107,7 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   build-and-deploy:
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         steps:
           - name: Pull Data from main branch
