@@ -38,7 +38,7 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Solution1/UnitTest.sln'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -54,15 +54,15 @@ jobs:
       - name: Test
         run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
 
- #     - name: Test Report
-      #  uses: dorny/test-reporter@v1
-     #   if: always()
-     #   with:
-      #    name: DotNET Tests
-      #    path: "**/test-results.trx"
-      #    reporter: dotnet-trx
-       #   fail-on-error: true
-       #   github-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+         name: DotNET Tests
+         path: "**/test-results.trx"
+         reporter: dotnet-trx
+         fail-on-error: true
+         github-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
     
   sonarcloud:
     name: buld and sonarcloud
@@ -119,7 +119,7 @@ jobs:
       
           - name: Save Docker image to a tar file
             run: |
-              docker save -o pot_shop_official_back_end.tar pot_shop_official_front_end
+              docker save -o pot_shop_official_back_end.tar pot_shop_official_back_end
       
           ###################
           - name: Transfer Docker image to remote machine
