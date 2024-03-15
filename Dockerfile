@@ -8,13 +8,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-<<<<<<< HEAD
-COPY ["back-end/back-end.csproj", "back-end/"]
-COPY ["Business/Model/Model.csproj", "Business/Model/"]
-=======
+
 COPY ["back-end.csproj", "back-end/"]
-COPY ["pot_shop_official-back-end/Business/Model/Model.csproj", "Business/Model/"]
->>>>>>> aad198ce6f603a7f33703a61d129848deda1530d
+COPY ["Business/Model/Model.csproj", "Business/Model/"]
+
 COPY ["Data/Entity/Entity.csproj", "Data/Entity/"]
 COPY ["Ioc/Ioc.Api/Ioc.Api.csproj", "Ioc/Ioc.Api/"]
 COPY ["Business/Service.Interface/Service.Interface.csproj", "Business/Service.Interface/"]
