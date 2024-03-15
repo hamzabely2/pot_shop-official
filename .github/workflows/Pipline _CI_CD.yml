@@ -9,36 +9,12 @@ on:
     branches:
       - main
       - develop
-      
 jobs:
-  #depcheck:
-    #runs-on: ubuntu-latest
-    #name: Dependency Check
-    #steps:
-      #- name: Checkout
-       # uses: actions/checkout@v2
-
-      #- name: Setup .NET
-      #  uses: actions/setup-dotnet@v1
-      #  with:
-         #dotnet-version: '6.x' # Assurez-vous de spécifier la bonne version de .NET
-
-     # - name: Install Dependency-Check global tool
-       # run: dotnet tool install --global dotnet-dependency-check
-
-     # - name: Run Dependency-Check
-      #  run: dotnet dependency-check analyze --project .
-
-      #- name: Upload Dependency-Check results
-       # uses: actions/upload-artifact@v2
-        #with:
-         # name: dependency-check-report
-          #path: dependency-check-report.html
   test:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Solution1/UnitTest.sln'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -60,7 +36,7 @@ jobs:
         with:
          name: DotNET Tests
          path: "**/test-results.trx"
-         #reporter: dotnet-trx
+         reporter: dotnet-trx
          fail-on-error: true
          github-token: ${{ secrets.TOKEN }}
     
@@ -107,7 +83,7 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   build-and-deploy:
-        runs-on: windows-latest
+        runs-on: self-hosted
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         steps:
           - name: Pull Data from main branch
