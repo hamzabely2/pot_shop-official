@@ -103,13 +103,13 @@ jobs:
           ###################
           - name: load Docker image
             run: |
-              echo "${{ secrets.PASSWORD }}" | sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo -S docker load -i pot_shop_official_back_end.tar'
+              echo "${{ secrets.PASSWORD }}" | sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo -S docker load -i back/pot_shop_official_back_end.tar'
             env:
               SSHPASS: ${{ secrets.PASSWORD }}
            ###################
           - name: Start Docker Container
             run: |
-              sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'docker-compose -f docker-compose.yml up -d'
+              sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'docker-compose -f  back/docker-compose.yml up -d'
           ###################
           - name: Remove Docker Images
             run: |
