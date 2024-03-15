@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["back-end.csproj", "back-end/"]
-COPY ["../Business/Model/Model.csproj", "Business/Model/"]
+COPY ["/Business/Model/Model.csproj", "Business/Model/"]
 COPY ["Data/Entity/Entity.csproj", "Data/Entity/"]
 COPY ["Ioc/Ioc.Api/Ioc.Api.csproj", "Ioc/Ioc.Api/"]
 COPY ["Business/Service.Interface/Service.Interface.csproj", "Business/Service.Interface/"]
