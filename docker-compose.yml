@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: s33Sjubfsiu
+      MYSQL_DATABASE: database_crm
+      MYSQL_USER: crm_user
+      MYSQL_PASSWORD: m68Dk=A7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
