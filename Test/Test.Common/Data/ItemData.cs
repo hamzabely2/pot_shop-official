@@ -15,6 +15,9 @@ namespace Test.Common
                 Description = "description vase",
                 CategoryId = 1,
                 MaterialId = 1,
+                Weight = 2,
+                Width = 4,
+                Height = 3,
                 Stock = 55
             };
             var item2 = new Item
@@ -25,6 +28,9 @@ namespace Test.Common
                 Description = "description tagin",
                 CategoryId = 1,
                 MaterialId = 1,
+                Weight = 2,
+                Width = 4,
+                Height = 3,
                 Stock = 55
             };
             idbContext.Items.AddRange(item1, item2);

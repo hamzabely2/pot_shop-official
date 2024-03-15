@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Repository.Interface.Item;
+using System;
 using Test.Common;
 
 namespace Test.Unit
@@ -109,10 +110,6 @@ namespace Test.Unit
             Assert.That(itemDelete, Is.Not.Null);
             Assert.That(itemDelete.Id, Is.EqualTo(itemId));
         }
-
-
-
-
 
 
     }

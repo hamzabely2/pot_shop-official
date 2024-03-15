@@ -21,5 +21,4 @@ public partial class Order
     public string OrderStatus { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime UpdateDate { get; set; }
-
 }

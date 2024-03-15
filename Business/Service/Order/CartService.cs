@@ -68,7 +68,7 @@ namespace Service.Order
             if (existingCartItem != null)
             {
                 existingCartItem.Quantity = existingCartItem.Quantity + request.Quantity;
-                existingCartItem.Subtotal = item.Price * existingCartItem.Quantity;
+                //existingCartItem.Subtotal = item.Price * existingCartItem.Quantity;
                 existingCartItem.UpdateDate = DateTime.UtcNow;
                 await _cartRepository.UpdateElementAsync(existingCartItem).ConfigureAwait(false);
 

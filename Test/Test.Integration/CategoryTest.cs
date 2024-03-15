@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Xunit;
+using static Test.Common.GenerateToken;
 
 namespace Test.Integration
 {
@@ -35,31 +36,6 @@ namespace Test.Integration
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
         }
-
-        public class ApiResponse<T>
-        {
-            public string? Message { get; set; }
-            public T? Result { get; set; }
-        }
-
-        public string GenerateJwtTokenForUser(ClaimsPrincipal user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"); // Changez ceci avec votre clé secrète réelle
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = user.Identity as ClaimsIdentity,
-                Expires = DateTime.UtcNow.AddHours(1),
-                Audience = "http://localhost:7269",
-                Issuer = "http://localhost:8080",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-
-        }
-
 
 
         [Fact]
@@ -94,7 +70,7 @@ namespace Test.Integration
         public async Task CreateCategorie_ReturnCategorie()
         {
 
-            var newCategory = new CategoryDto { Label = "category_test" };
+            var newCategory = new CategoryDto { Id=5,  Label = "category_test",Description = "description category_test" };
             var newCategoryJson = new StringContent(JsonSerializer.Serialize(newCategory), Encoding.UTF8, "application/json");
 
             var adminUser = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>

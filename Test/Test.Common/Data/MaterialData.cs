@@ -10,12 +10,14 @@ namespace Test.Common
             var material1 = new Material
             {
                 Id = 1,
-                Label = "Argile rouge"
+                Label = "Argile rouge",
+                Description = "description Argile rouge"
             };
             var material2 = new Material
             {
                 Id = 2,
-                Label = "Argile blanche"
+                Label = "Argile blanche",
+                Description = "description Argile blanche"
             };
             idbContext.Materials.AddRange(material1, material2);
             idbContext.SaveChanges();

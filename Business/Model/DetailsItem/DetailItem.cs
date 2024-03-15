@@ -5,14 +5,14 @@ namespace Model.DetailsItem
 {
     public class CategoryDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Label { get; set; }
         public string Description { get; set; }
 
     }
     public class ColorDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Label { get; set; }
         public string Hex { get; set; }
     }
@@ -23,7 +23,7 @@ namespace Model.DetailsItem
     /// </summary>
     public class ReadMaterial
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Label { get; set; }
         public string Description { get; set; }
 

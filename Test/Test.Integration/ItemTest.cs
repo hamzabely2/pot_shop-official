@@ -31,7 +31,7 @@ namespace Test.Integration
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
-            _context.CreateItem();
+           _context.CreateItem();
 
         }
 
@@ -57,13 +57,11 @@ namespace Test.Integration
         [Fact]
         public async Task GetItem_ReturnItems()
         {
-
-
             // Arrange
             var response = await _client.GetAsync("/api/item/1");
 
             // Assert
-            //response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
             var items = response;
 

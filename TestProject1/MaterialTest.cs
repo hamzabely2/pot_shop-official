@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Repository.Interface.Item;
 using Test.Common;
 
-namespace Api.Test.Unit
+namespace Test.Unit
 {
     public class MaterialTest : TestBase
     {
@@ -17,7 +17,7 @@ namespace Api.Test.Unit
             SetUpTest();
 
             _materalRepository = _serviceProvider?.GetService<MaterialIRepository>();
-            _context.CreateMaterial();
+            //_context.CreateMaterial();
         }
 
         [TearDown]
@@ -29,6 +29,8 @@ namespace Api.Test.Unit
         [Test]
         public async Task GetMaterial()
         {
+            
+
             // Arrange
             var materialId = 1;
 
@@ -44,6 +46,8 @@ namespace Api.Test.Unit
         [Test]
         public async Task DeleteMaterial()
         {
+           
+
             // Arrange
             var materialId = 2;
 

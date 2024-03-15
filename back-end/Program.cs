@@ -72,7 +72,7 @@ builder.Services.AddCors(options =>
     // Ajouter une autre politique si nécessaire
     options.AddPolicy(
         "ChromPolicy",
-        policy => policy.WithOrigins("http://localhost:2000").AllowAnyHeader().AllowAnyMethod()
+        policy => policy.WithOrigins("http://localhost:2001").AllowAnyHeader().AllowAnyMethod()
     );
 
     options.AddPolicy(

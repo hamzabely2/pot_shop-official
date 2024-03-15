@@ -26,10 +26,10 @@ namespace Ioc.Test
         /// <returns></returns>
         public static IServiceCollection ConfigureInjectionDependencyRepositoryTest(this IServiceCollection services)
         {
-
             services.AddScoped<ItemIRepository, ItemRepository>();
             services.AddScoped<MaterialIRepository, MaterialRepository>();
             services.AddScoped<ColorIRepository, ColorRepository>();
+            services.AddScoped<IColorItemRepository, ColorItemRepository>();
             services.AddScoped<CategoryIRepository, CategoryRepository>();
             services.AddScoped<UserIRepository, UserRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
@@ -37,17 +37,11 @@ namespace Ioc.Test
             services.AddScoped<RoleUserIRepository, RoleUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<IColorItemRepository, ColorItemRepository>();
+            services.AddScoped<ImageIRepository, ImageRepository>();
+
 
             return services;
         }
-
-
-        /// <summary>
-        /// Configure service injection
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns></returns>
         public static IServiceCollection ConfigureInjectionDependencyServiceTest(this IServiceCollection services)
         {
             services.AddScoped<IConnectionService, ConnectionService>();
@@ -58,9 +52,9 @@ namespace Ioc.Test
             services.AddScoped<IDetailsItemService, DetailsItemService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICartService, CartService>();
+
             return services;
         }
-
 
         /// <summary>
         /// Configuring the in-memory database connection for the test environment

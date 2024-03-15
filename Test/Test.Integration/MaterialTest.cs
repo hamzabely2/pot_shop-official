@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Xunit;
+using static Test.Common.GenerateToken;
 
 namespace Test.Integration
 {
@@ -34,31 +35,6 @@ namespace Test.Integration
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
         }
-
-        public class ApiResponse<T>
-        {
-            public string Message { get; set; }
-            public T Result { get; set; }
-        }
-
-        public string GenerateJwtTokenForUser(ClaimsPrincipal user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"); // Changez ceci avec votre clé secrète réelle
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = user.Identity as ClaimsIdentity,
-                Expires = DateTime.UtcNow.AddHours(1),
-                Audience = "http://localhost:7269",
-                Issuer = "http://localhost:8080",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-
-        }
-
 
 
         [Fact]
@@ -92,8 +68,7 @@ namespace Test.Integration
         [Fact]
         public async Task CreateMaterial_ReturnMaterial()
         {
-
-            var newMaterial = new ReadMaterial { Id = "3",Label = "material_test",Description="description material_test"};
+            var newMaterial = new ReadMaterial { Id = 5,Label = "material_test",Description="description material_test"};
             var newMaterialJson = new StringContent(JsonSerializer.Serialize(newMaterial), Encoding.UTF8, "application/json");
 
             var adminUser = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>

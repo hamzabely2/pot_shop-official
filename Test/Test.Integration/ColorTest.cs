@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Xunit;
+using static Test.Common.GenerateToken;
 
 namespace Test.Integration
 {
@@ -37,29 +38,6 @@ namespace Test.Integration
             _context.Database.EnsureCreated();
         }
 
-        public class ApiResponse<T>
-        {
-            public string Message { get; set; }
-            public T Result { get; set; }
-        }
-
-        public string GenerateJwtTokenForUser(ClaimsPrincipal user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"); // Changez ceci avec votre clé secrète réelle
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = user.Identity as ClaimsIdentity,
-                Expires = DateTime.UtcNow.AddHours(1),
-                Audience = "http://localhost:7269",
-                Issuer = "http://localhost:8080",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-
-        }
 
 
 
@@ -95,7 +73,7 @@ namespace Test.Integration
         public async Task CreateColor_ReturnColor()
         {
 
-            var newItem = new ColorDto { Hex = "yellow" };
+            var newItem = new ColorDto {Id = 5 ,Hex = "ye#00001",Label = "yellow" };
             var newItemJson = new StringContent(JsonSerializer.Serialize(newItem), Encoding.UTF8, "application/json");
 
             var adminUser = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
