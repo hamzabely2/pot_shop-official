@@ -18,7 +18,7 @@ COPY ["Data/Repository.Interface/Repository.Interface.csproj", "Data/Repository.
 COPY ["Business/Mapper/Mapper.csproj", "Business/Mapper/"]
 COPY ["Data/Repository/Repository.csproj", "Data/Repository/"]
 COPY "Data/Context/Context.csproj", "Data/Context/"
-COPY ["Ioc/Ioc.Test/Ioc.Test.csproj", "Ioc/Ioc.Test/"]
+COPY "Ioc/Ioc.Test/Ioc.Test.csproj", "Ioc/Ioc.Test/"
 RUN dotnet restore "./back-end/./back-end.csproj"
 COPY . .
 WORKDIR "/src/back-end"
