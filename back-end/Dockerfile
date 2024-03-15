@@ -2,8 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+ENV DOTNET_URLS=http://+:1004/
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -20,6 +19,7 @@ COPY ["Business/Mapper/Mapper.csproj", "Business/Mapper/"]
 COPY ["Data/Repository/Repository.csproj", "Data/Repository/"]
 COPY ["Data/Context/Context.csproj", "Data/Context/"]
 COPY ["Ioc/Ioc.Test/Ioc.Test.csproj", "Ioc/Ioc.Test/"]
+
 
 RUN dotnet restore "./back-end/./back-end.csproj"
 COPY . .
