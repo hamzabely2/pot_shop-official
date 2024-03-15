@@ -62,7 +62,7 @@ jobs:
          path: "**/test-results.trx"
          reporter: dotnet-trx
          fail-on-error: true
-         github-token: ${{ secrets.MY_PERSONAL_ACCESS_TOKEN }}
+         github-token: ${{ secrets.TOKEN }}
     
   sonarcloud:
     name: buld and sonarcloud
