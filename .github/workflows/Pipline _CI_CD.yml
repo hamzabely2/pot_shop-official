@@ -98,7 +98,7 @@ jobs:
           ###################
           - name: Transfer Docker image to remote machine
             run: |
-              sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no pot_shop_official_back_end.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/back/
+              sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no pot_shop_official_back_end.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:back/
             env:
               SSH_AUTH_SOCK: /tmp/ssh_agent.sock
               SSHPASS: ${{ secrets.PASSWORD }}
