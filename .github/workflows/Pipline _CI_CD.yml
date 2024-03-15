@@ -115,7 +115,7 @@ jobs:
       
           - name: Build Docker images
             run: |
-              docker build -t pot_shop_official_back_end ./back-end
+              docker build -t pot_shop_official_back_end .
       
           - name: Save Docker image to a tar file
             run: |
