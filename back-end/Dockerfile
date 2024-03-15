@@ -8,8 +8,8 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["back-end.csproj", "back-end/"]
-COPY ["../../Business/Model/Model.csproj", "Business/Model/"]
+COPY ["back-end/back-end.csproj", "back-end/"]
+COPY ["Business/Model/Model.csproj", "Business/Model/"]
 COPY ["Data/Entity/Entity.csproj", "Data/Entity/"]
 COPY ["Ioc/Ioc.Api/Ioc.Api.csproj", "Ioc/Ioc.Api/"]
 COPY ["Business/Service.Interface/Service.Interface.csproj", "Business/Service.Interface/"]
@@ -21,9 +21,8 @@ COPY ["Data/Repository/Repository.csproj", "Data/Repository/"]
 COPY ["Data/Context/Context.csproj", "Data/Context/"]
 COPY ["Ioc/Ioc.Test/Ioc.Test.csproj", "Ioc/Ioc.Test/"]
 RUN dotnet restore "./back-end/./back-end.csproj"
-
-WORKDIR "/src/back-end"
 COPY . .
+WORKDIR "/src/back-end"
 RUN dotnet build "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
