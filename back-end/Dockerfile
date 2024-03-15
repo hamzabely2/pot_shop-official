@@ -11,8 +11,9 @@ WORKDIR /src
 COPY ["back-end.csproj", "back-end/"]
 
 RUN dotnet restore "./back-end/./back-end.csproj"
-COPY . .
+
 WORKDIR "/src/back-end"
+COPY . .
 RUN dotnet build "./back-end.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
