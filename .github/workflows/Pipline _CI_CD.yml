@@ -88,18 +88,14 @@ jobs:
         steps:
           - name: Pull Data from main branch
             uses: actions/checkout@v2
-      
           - name: Build Docker images
             run: 
               docker build -t pot_shop_official_back_end .
-      
+          ###################
           - name: Save Docker image to a tar file
             run: |
               docker save -o pot_shop_official_back_end.tar pot_shop_official_back_end
-      
           ###################
-          - name: Install sshpass
-            run: sudo apt-get install -y sshpass
           - name: Transfer Docker image to remote machine
             run: |
               sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no pot_shop_official_back_end.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/back/
