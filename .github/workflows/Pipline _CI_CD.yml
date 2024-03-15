@@ -38,8 +38,6 @@ jobs:
          path: "**/test-results.trx"
          reporter: dotnet-trx
          fail-on-error: true
-         github-token: ${{ secrets.TOKEN }}
-    
   sonarcloud:
     name: buld and sonarcloud
     runs-on: windows-latest
