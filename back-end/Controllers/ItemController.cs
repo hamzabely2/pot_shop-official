@@ -50,7 +50,7 @@ namespace back_end.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet()]
-        [ProducesResponseType(typeof(IEnumerable<ReadItem>), 200)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetListItem()
@@ -73,7 +73,7 @@ namespace back_end.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{itemId}")]
-        [ProducesResponseType(typeof(IEnumerable<ReadItem>), 200)]
+        [ProducesResponseType(typeof(ReadItem), 200)]
         [ProducesResponseType(typeof(StatusCodeResult), 500)]
         [ProducesResponseType(typeof(StatusCodeResult), 400)]
         public async Task<ActionResult> GetItemById(int itemId)
