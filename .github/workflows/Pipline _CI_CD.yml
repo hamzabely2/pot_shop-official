@@ -40,7 +40,7 @@ jobs:
          fail-on-error: true
   sonarcloud:
     name: buld and sonarcloud
-    runs-on: windows-latest
+    runs-on: self-hosted
     needs: [test]
     steps:
       - name: Set up JDK 17
