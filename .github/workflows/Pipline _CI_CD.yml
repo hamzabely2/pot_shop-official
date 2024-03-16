@@ -26,10 +26,7 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
-
-      - name: Build
-        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG
-
+        
       - name: Test
         run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
 
