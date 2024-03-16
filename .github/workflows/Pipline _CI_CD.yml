@@ -40,7 +40,7 @@ jobs:
          #fail-on-error: true
   sonarcloud:
     name: buld and sonarcloud
-    runs-on: windows-laster
+    runs-on:  windows-latest
     needs: [test]
     steps:
       - name: Set up JDK 17
