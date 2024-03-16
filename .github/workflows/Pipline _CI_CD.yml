@@ -14,7 +14,7 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'Solution1/UnitTest.sln'
-    runs-on: windows-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
          fail-on-error: true
   sonarcloud:
     name: buld and sonarcloud
-    runs-on: self-hosted
+    runs-on: windows-laster
     needs: [test]
     steps:
       - name: Set up JDK 17
