@@ -63,21 +63,16 @@ builder
         };
     });
 
+string[] origins = new string[] { "http://158.178.198.162:1005", "http://localhost:2001", "http://localhost:3000" };
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         "ReactLocal",
-      policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()
-    );
-    options.AddPolicy(
-       "React",
-     policy => policy.WithOrigins("http://158.178.198.162:1005").AllowAnyHeader().AllowAnyMethod()
-   );
-    options.AddPolicy(
-        "PotShopMobile",
-      policy => policy.WithOrigins("http://localhost:2001").AllowAnyHeader().AllowAnyMethod()
+      policy => policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod()
     );
 });
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -98,8 +93,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("ReactLocal");
-app.UseCors("React");
-app.UseCors("PotShopMobile");
 app.MapControllers();
 
 app.Run();
