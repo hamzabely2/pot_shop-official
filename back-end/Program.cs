@@ -66,18 +66,16 @@ builder
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
-        "ReactPolicy",
-        policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()
+        "ReactLocal",
+      policy => policy.WithOrigins("http://localhost:3006").AllowAnyHeader().AllowAnyMethod()
     );
-    // Ajouter une autre politique si nécessaire
     options.AddPolicy(
-        "ChromPolicy",
-        policy => policy.WithOrigins("http://localhost:2001").AllowAnyHeader().AllowAnyMethod()
-    );
-
+       "React",
+     policy => policy.WithOrigins("http://158.178.198.162:3006").AllowAnyHeader().AllowAnyMethod()
+   );
     options.AddPolicy(
-        "MobilePolicy",
-        policy => policy.WithOrigins("http://localhost:64230").AllowAnyHeader().AllowAnyMethod()
+        "PotShopMobile",
+      policy => policy.WithOrigins("http://localhost:2001").AllowAnyHeader().AllowAnyMethod()
     );
 });
 builder.Services.AddControllers();
@@ -99,9 +97,9 @@ app.UseCookiePolicy();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("ReactPolicy");
-app.UseCors("MobilePolicy");
-app.UseCors("ChromPolicy");
+app.UseCors("ReactLocal");
+app.UseCors("React");
+app.UseCors("PotShopMobile");
 app.MapControllers();
 
 app.Run();
