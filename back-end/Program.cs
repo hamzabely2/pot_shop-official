@@ -67,11 +67,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         "ReactLocal",
-      policy => policy.WithOrigins("http://localhost:3006").AllowAnyHeader().AllowAnyMethod()
+      policy => policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod()
     );
     options.AddPolicy(
        "React",
-     policy => policy.WithOrigins("http://158.178.198.162:3000").AllowAnyHeader().AllowAnyMethod()
+     policy => policy.WithOrigins("http://158.178.198.162:1005").AllowAnyHeader().AllowAnyMethod()
    );
     options.AddPolicy(
         "PotShopMobile",
