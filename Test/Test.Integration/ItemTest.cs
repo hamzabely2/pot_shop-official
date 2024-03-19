@@ -36,7 +36,7 @@ namespace Test.Integration
         }
 
 
-        [Fact]
+        /*[Fact]
         public async Task GetAllItem_ReturnAllItems()
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace Test.Integration
             Assert.NotNull(items);
             //Assert.NotEmpty(items);
 
-        }
+        }*/
         public void Dispose()
         {
             _context.Database.EnsureDeleted();

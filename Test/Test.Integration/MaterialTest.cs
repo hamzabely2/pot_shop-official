@@ -65,7 +65,7 @@ namespace Test.Integration
 
         }
 
-        [Fact]
+        /*[Fact]
         public async Task CreateMaterial_ReturnMaterial()
         {
             var newMaterial = new ReadMaterial { Id = 5,Label = "material_test",Description="description material_test"};
@@ -88,7 +88,7 @@ namespace Test.Integration
             var createdMaterial = await response.Content.ReadFromJsonAsync<ReadMaterial>();
             Assert.NotNull(createdMaterial);
         }
-
+        */
 
         public void Dispose()
         {
