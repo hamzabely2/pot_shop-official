@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.User;
 using Service.Interface.User;
+using System.Linq;
 
 namespace back_end.Controllers
 {
@@ -80,8 +81,16 @@ namespace back_end.Controllers
             try
             {
                 var result = await _userService.Register(request);
+                Response.Cookies.Append("auth_token", "Bearer " + result, new CookieOptions
+                {
+                    Path = "/",
+                    Expires = DateTime.UtcNow.AddHours(1) 
+                });
+
                 string message = "inscription réussie";
+
                 return Ok(new { message, result });
+                
             }
             catch (Exception ex)
             {
@@ -105,7 +114,13 @@ namespace back_end.Controllers
         {
             try
             {
+            
                 var result = await _userService.Login(request).ConfigureAwait(false);
+                Response.Cookies.Append("auth_token", "Bearer " + result, new CookieOptions
+                {
+                    Path = "/",
+                    Expires = DateTime.UtcNow.AddHours(1)
+                });
                 string message = "connexion réussie";
                 return Ok(new { message, result });
             }

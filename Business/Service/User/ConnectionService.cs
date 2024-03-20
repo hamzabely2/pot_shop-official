@@ -141,5 +141,6 @@ namespace Service.User
                 Role = principal.FindFirst(ClaimTypes.Role)?.Value,
             };
         }
+        
     }
 }

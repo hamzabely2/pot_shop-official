@@ -5,6 +5,7 @@ using Mapper.Adress;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Service.User;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -80,6 +81,7 @@ builder.Services.AddSwaggerGen();
 //builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSetting"));
 
 var app = builder.Build();
+//app.UseMiddleware<MiddlewareUser>();
 
 if (app.Environment.IsDevelopment())
 {
