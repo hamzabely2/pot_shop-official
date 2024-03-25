@@ -13,7 +13,7 @@ jobs:
   test:
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'Solution1/UnitTest.sln'
+      SOLUTION: 'back-end/UnitTest.sln'
 
     runs-on: ubuntu-latest
 
