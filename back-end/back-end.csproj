@@ -7,6 +7,9 @@
     <RootNamespace>back_end</RootNamespace>
     <UserSecretsId>1f72ea3c-3cf1-471b-ac8b-3ab091aa15e3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+    <VSTestLogger>trx%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
+    <VSTestResultsDirectory>$(MSBuildThisFileDirectory)/TestResults/$(TargetFramework)</VSTestResultsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
