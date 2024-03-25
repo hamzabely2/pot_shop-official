@@ -15,6 +15,10 @@ jobs:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'back-end/UnitTest.sln'
     runs-on: self-hosted
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
