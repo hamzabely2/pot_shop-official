@@ -14,9 +14,7 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'back-end/UnitTest.sln'
-
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
 
