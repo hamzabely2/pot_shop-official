@@ -5,7 +5,8 @@ using NUnit.Framework;
 using Repository.Interface.Item;
 using Test.Common;
 
-namespace Api.Test.Unit
+
+namespace Test.Unit
 {
     public class CategoryTest : TestBase
     {
@@ -18,7 +19,7 @@ namespace Api.Test.Unit
             SetUpTest();
 
             _categoryRepository = _serviceProvider?.GetService<CategoryIRepository>();
-            _context.CreateCategory();
+           // _context.CreateCategory();
         }
 
         [TearDown]

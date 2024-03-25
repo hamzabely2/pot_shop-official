@@ -58,7 +58,6 @@ namespace back_end.Controllers
             try
             {
                 var result = await _itemService.GetListItem().ConfigureAwait(false);
-                _logger.LogInformation("La liste des artciles", result);
                 string message = "la liste des artciles";
                 return Ok(new { message, result });
             }
