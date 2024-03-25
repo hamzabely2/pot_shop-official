@@ -13,32 +13,30 @@ jobs:
   test:
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'back-end/UnitTest.sln'
+      SOLUTION: 'Solution1/UnitTest.sln'
     runs-on: self-hosted
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.x
+          dotnet-version: 6.0.100
+
       - name: Restore dependencies
         run: dotnet restore
-        
+
       - name: Test
         run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
 
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: DotNET Tests
-          path: "**/test-results.trx"
-          reporter: dotnet-trx
+      #- name: Test Report
+        #uses: dorny/test-reporter@v1
+        #if: always()
+        #with:
+          #name: DotNET Tests
+          #path: "**/test-results.trx"                            
+          #reporter: dotnet-trx
           #fail-on-error: true
   sonarcloud:
     name: buld and sonarcloud
