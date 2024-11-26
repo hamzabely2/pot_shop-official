@@ -1,66 +1,119 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - admintest
+name: Pipline _CI_CD
 
 on:
   push:
     branches:
-      - develop
       - main
-  workflow_dispatch:
-
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 jobs:
-  build:
-    runs-on: windows-latest
-
+  test:
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'Solution1/UnitTest.sln'
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
+          dotnet-version: 6.0.100
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+      - name: Test
+        run: dotnet test  --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+      #- name: Test Report
+        #uses: dorny/test-reporter@v1
+        #if: always()
+        #with:
+          #name: DotNET Tests
+          #path: "**/test-results.trx"                            
+          #reporter: dotnet-trx
+          #fail-on-error: true
+  sonarcloud:
+    name: buld and sonarcloud
+    runs-on:  windows-latest
+    needs: [test]
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - uses: actions/checkout@v3
         with:
-          client-id: ${{ 21068a04-1811-4be0-b0e4-215e1748c94a }}
-          tenant-id: ${{ admintest-dcfcggcbc7hfdjcy.canadacentral-01.azurewebsites.net }}
-          subscription-id: ${{ 12e03f26-3056-4bc2-acdb-863123f1759d }}
-
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
         with:
-          app-name: 'admintest'
-          slot-name: 'Production'
-          package: .
-          
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"hamzabely2_pot_shop_official-back-end" /o:"hamzabely2" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+           dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+  build-and-deploy:
+        runs-on: self-hosted
+        needs: [sonarcloud]
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        steps:
+          - name: Pull Data from main branch
+            uses: actions/checkout@v2
+          - name: Build Docker images
+            run: 
+              docker build -t pot_shop_official_back_end .
+          ###################
+          - name: Save Docker image to a tar file
+            run: |
+              docker save -o pot_shop_official_back_end.tar pot_shop_official_back_end
+          ###################
+          - name: Transfer Docker image to remote machine
+            run: |
+              sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no pot_shop_official_back_end.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:back/
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+              SSHPASS: ${{ secrets.PASSWORD }}
+          ###################
+          - name: load Docker image
+            run: |
+              echo "${{ secrets.PASSWORD }}" | sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo -S docker load -i back/pot_shop_official_back_end.tar'
+            env:
+              SSHPASS: ${{ secrets.PASSWORD }}
+           ###################
+          - name: Start Docker Container
+            run: |
+              sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'docker-compose -f  back/docker-compose.yml up -d'
+          ###################
+          - name: Remove Docker Images
+            run: |
+             sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'sudo docker image prune -a -f'
+            env:
+              SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+              SSHPASS: ${{ secrets.PASSWORD }}
